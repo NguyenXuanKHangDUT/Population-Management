@@ -14,7 +14,6 @@ private:
     size_t bucketCount;
     size_t currentSize;
 
-    // Custom hash cho string (Polynomial rolling hash)
     size_t hashString(const std::string& s) const {
         const size_t p = 131;
         const size_t mod = 1000000007;
@@ -24,24 +23,19 @@ private:
         return hash;
     }
 
-    // Hash thủ công cho kiểu cơ bản
     template <typename T>
     size_t defaultHash(const T& key) const {
         return static_cast<size_t>(key * 2654435761u); // Knuth's multiplicative hash
     }
 
-    // getIndex() mà không cần if constexpr
     size_t getIndex(const K& key) const {
-        // overload theo kiểu dữ liệu
         return getIndexImpl(key);
     }
 
-    // overload cho std::string
     size_t getIndexImpl(const std::string& key) const {
         return hashString(key) % bucketCount;
     }
 
-    // overload cho kiểu cơ bản (int, long long, char,…)
     template <typename T>
     size_t getIndexImpl(const T& key) const {
         return defaultHash(key) % bucketCount;
