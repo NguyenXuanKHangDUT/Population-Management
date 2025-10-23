@@ -106,15 +106,16 @@
         ],
         
     },
-    // "github.copilot.enable": {
-    //     "*": false
-    // },
+    "github.copilot.enable": {
+        "*": false
+    },
 
     // "editor.inlineSuggest.enabled": false
     // disable github copilot suggestions module:
     // "github.copilot.inlineSuggest.enable": false,
 
     // "C_Cpp.intelliSenseEngine": "Disabled"
+    "git.decorations.enabled": false
     
 }
 

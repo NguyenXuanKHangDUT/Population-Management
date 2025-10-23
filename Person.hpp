@@ -8,7 +8,7 @@
 
 using namespace std;
 
-
+class Host; // forward declaration
 class Person
 {
 protected:
@@ -29,13 +29,15 @@ protected:
     // Example: Age, etc.
     int Age;
     int YearOfBirth;
-    Person* Host; // Host of Household
+    Host* HostPtr; // Host of Household
     string Region;
 
 public:
     // Constructor
     Person(const string&, const string&, const string&, const string&, bool, const string&, const string&, const string&, const double&, const string&);
-    
+    // Destructor
+    virtual ~Person();
+
     // Getters
     string getPersonal_ID() const;
     string getHousehold_ID() const;
@@ -49,12 +51,12 @@ public:
     double getIncome() const;
     int getAge() const;
     Person* getPersonByID(const string&, const MyVector<Person*>&, const HashMap<string, Person*>&) const;
-    Person* getHost(const HashMap<string, Person*>&) const;
+    Host* getHost(const HashMap<string, Person*>&) const;
     string getPassword() const;
 
     // Setters
     void setPartner(Person*);
-    void setHost(Person*);
+    void setHost(Host*);
     void setJob(const string&);
     void setPassword(const string&);
 

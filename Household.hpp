@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "Person.hpp"
+#include "Host.hpp"
 
 #include <iostream>
 #include <string>
@@ -10,18 +11,19 @@
 
 using namespace std;
 
-
-
+class Person; // forward declaration
+class Host; // forward declaration
 class Household 
 {
 private:
     string Household_ID;
     string Address;
     string Host_Personal_ID;
-    Person* Host;
+    Host* HostPtr;
     string Region;
     
     MyVector<Person*> Member;
+    HashMap<string, Person*> nameMember;
     
 public:
     friend class Host;
@@ -31,15 +33,15 @@ public:
     string getHousehold_ID() const;
     string getAddress() const;
     string getHost_Personal_ID() const;
-    Person* getHost() const;
+    Host* getHost() const;
     string getRegion() const;
-    Person* getPersonByID(const string&, const MyVector<Person*>&, const HashMap<string, Person*>&) const;
+    Person* getPersonByID(const string&, const HashMap<string, Person*>&) const;
     
     Person* getPersonByName(const string&) const;
     double getIncome() const;
 
     // Setters
-    void setHost(Person*);
+    void setHost(Host*);
     void addMember(Person*);
     void removeMember(Person*);
 

@@ -1,7 +1,7 @@
-#include "Admin.hpp"
+#include "Host.hpp"
+
 #include "Person.hpp"
 #include "Household.hpp"
-#include "Host.hpp"
 
 #include <iostream>
 #include <string>
@@ -9,12 +9,13 @@
 #include "DSA/MyVector.h"
 #include "DSA/HashMap.h"
 
+
 using namespace std;
 
-Admin::Admin(const string& pID, const string& hID, const string& fName, const string& bDay, bool gend, const string& addr, const string& pnID, const string& job, const double& inc, const string& pwd) 
-        : Host(pID, hID, fName, bDay, gend, addr, pnID, job, inc, pwd) {}
+Host::Host(const string& pID, const string& hID, const string& fName, const string& bDay, bool gend, const string& addr, const string& pnID, const string& job, const double& inc, const string& pwd) 
+        : Person(pID, hID, fName, bDay, gend, addr, pnID, job, inc, pwd) {}
 
-ostream& operator<<(ostream& out, const Admin& p) {
+ostream& operator<<(ostream& out, const Host& p) {
     out << "----------------------------------" << endl;
     out << "Person Information:" << endl;
     out << "Personal ID: " << p.Personal_ID << endl;

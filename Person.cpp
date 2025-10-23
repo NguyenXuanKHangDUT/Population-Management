@@ -1,4 +1,5 @@
 #include "Person.hpp"
+#include "Host.hpp"
 
 #include <iostream>
 #include <string>
@@ -18,7 +19,7 @@ Person::Person(const string& pID, const string& hID, const string& fName, const 
     this->Address = addr;
     this->Partner_ID = pnID;
     this->Partner = nullptr; // Initially no partner, can be set later using setPartner()
-    this->Host = nullptr; // Initially no host, can be set later using setHost()
+    this->HostPtr = nullptr; // Initially no host, can be set later using setHost()
     this->Job = job;
     this->Income = inc;
     this->password = pwd;
@@ -29,6 +30,11 @@ Person::Person(const string& pID, const string& hID, const string& fName, const 
     this->Age = 2025 - this->YearOfBirth; // Current year is 2025
 
     this->Region = this->Address.substr(0, this->Address.find('/'));
+}
+
+Person::~Person() {
+    delete Partner; Partner = nullptr;
+    delete HostPtr; HostPtr = nullptr;
 }
 
 // Getters
@@ -50,14 +56,17 @@ Person* Person::getPersonByID(const string& id, const MyVector<Person*>& profile
     }
     return nullptr; // Not found
 }
-Person* Person::getHost(const HashMap<string, Person*>& IDHash) const {
-    return this->Host;
-} 
+Host* Person::getHost(const HashMap<string, Person*>& IDHash) const {
+    return this->HostPtr;
+}
 string Person::getPassword() const { return password;}
 
 // Setters
 void Person::setPartner(Person* partner) { this->Partner = partner;}
-void Person::setHost(Person* host) { this->Host = host;}
+void Person::setHost(Host* host) {
+    // this->HostPtr = dynamic_cast<Host*>(host);
+    this->HostPtr = host;
+}
 void Person::setJob(const string& job) { this->Job = job;}
 void Person::setPassword(const string& pwd) { this->password = pwd;}
 
@@ -76,8 +85,8 @@ ostream& operator<<(ostream& out, const Person& p) {
         out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonal_ID() << (p.Gender?" (Wife)":" (Husband)") << endl;
     else out << "Single" << endl;
     out << "Household ID: " << p.Household_ID << endl;
-    // if (p.Host != nullptr)
-    out << "Host of Household: " << p.Host->getFullName() << "    ID: " << p.Host->getPersonal_ID() << endl;
+    // if (p.HostPtr != nullptr)
+    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonal_ID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
 }   

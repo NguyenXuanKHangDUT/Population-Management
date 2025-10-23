@@ -1,5 +1,5 @@
 #include "Household.hpp"
-
+#include "Host.hpp"
 #include "Person.hpp"
 
 #include <iostream>
@@ -9,7 +9,6 @@
 #include "DSA/HashMap.h"
 
 using namespace std;
-
 
 Household::Household(const string& hhID, const string& adr, const string& hpID, const string& rg) {
     this->Household_ID = hhID;
@@ -28,9 +27,9 @@ double Household::getIncome() const {
         ic += p->getIncome();
     return ic;
 }
-Person* Household::getHost() const { return this->Host;}
+Host* Household::getHost() const { return this->HostPtr;}
 string Household::getRegion() const { return this->Region;}
-Person* Household::getPersonByID(const string& id, const MyVector<Person*>& profiles, const HashMap<string, Person*>& IDHash) const {
+Person* Household::getPersonByID(const string& id, const HashMap<string, Person*>& IDHash) const {
     auto target = IDHash.find(id);
     if (target != IDHash.end() ) {
         return target->second;
@@ -44,8 +43,11 @@ Person* Household::getPersonByName(const string& name) const {
 }
 
 // Setters
-void Household::setHost(Person* host) { this->Host = host;}
-void Household::addMember(Person* member) { this->Member.push_back(member);}
+void Household::setHost(Host* host) { this->HostPtr = host;}
+void Household::addMember(Person* member) { 
+    this->Member.push_back(member);
+    this->nameMember[member->getFullName()] = member;
+}
 
 void Household::removeMember(Person* member) {
     for (int i = 0; i < this->Member.size(); ++i) 
@@ -62,10 +64,14 @@ ostream& operator<<(ostream& out, const Household& hh) {
     out << "Address: " << hh.Address << endl;
     out << "Region: " << hh.Region << endl;
     out << "Host: ";
-    out << hh.Host->getFullName() << "    ID: " << hh.Host->getPersonal_ID() << endl;
+    out << hh.HostPtr->getFullName() << "    ID: " << hh.HostPtr->getPersonal_ID() << endl;
     out << "Members: " << endl;
     out << "Family's income (per month): " << hh.getIncome() << " USD\n";
-    for (const Person* member : hh.Member) {
+    // for (const Person* member : hh.Member) {
+    //     out << " - " << member->getFullName() << " (ID: " << member->getPersonal_ID() << ", Age: " << member->getAge() << ")" << endl;
+    // }
+    for (auto it = hh.nameMember.begin(); it != hh.nameMember.end(); ++it) {
+        Person* member = it->second;
         out << " - " << member->getFullName() << " (ID: " << member->getPersonal_ID() << ", Age: " << member->getAge() << ")" << endl;
     }
     return out;

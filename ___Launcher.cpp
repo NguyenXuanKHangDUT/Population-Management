@@ -6,18 +6,16 @@
 
 #include "Person.hpp"
 #include "Household.hpp"
+#include "Admin.hpp"
 
-#include "DSA/MyVector.h"
-#include "DSA/HashMap.h"
+#include "DSA/Algorithms.h"
 
 using namespace std;
-
 
 MyVector<Person*> profiles; // Each pointer points to a Person
 MyVector<Household*> Family;  // Each pointer points to a Household
 
 HashMap<string, Person*> IDHash;   // Maps Personal_ID to Person pointers
-HashMap<string, Person*> NameHash; // Maps Fullname to Person pointers
 
 void readPersons();
 void readHouseholds();
@@ -26,7 +24,7 @@ void updatePerson();
 void updateHousehold();
 
 /*
-g++ .\___Launcher.cpp .\Household.cpp .\Person.cpp -o a
+g++ ___Launcher.cpp Household.cpp Host.cpp Admin.cpp Person.cpp -o a
 */
 
 int main() {
@@ -36,12 +34,14 @@ int main() {
 
     // Example usage: print all persons
     
-    for (const Household* h : Family) 
-    cout << *h << endl;
-    
+    // for (const Household* h : Family) 
+    // cout << *h << endl;
+    int c = 0;
     for (const Person* p : profiles) {
         cout << *p << endl;
+        c++;
     }
+    cout << c;
     
     // Update data
     updatePerson();
@@ -74,13 +74,19 @@ void readPersons() {
         job = Infor[7];
         double inc = stod(Infor[8]);
         pwd = Infor[9];
-        Person* newPerson = new Person(pID, hID, fName, bDay, gender, addr, pnID, job, inc, pwd);
-        profiles.push_back(newPerson);
+        Person* p = nullptr;
+        if (job == "admin")
+            p = new Admin(pID, hID, fName, bDay, gender, addr, pnID, job, inc, pwd);
+        else if (pID.substr(7,5) == hID.substr(3,5)) 
+            // This person is a Host
+            p = new Host(pID, hID, fName, bDay, gender, addr, pnID, job, inc, pwd);
+        else
+            p = new Person(pID, hID, fName, bDay, gender, addr, pnID, job, inc, pwd);
+        profiles.push_back(p);
     }
     file.close();
 
     for (Person* p : profiles) IDHash[(*p).getPersonal_ID()] = p;
-    for (Person* p : profiles) NameHash[(*p).getFullName()] = p;
 
     // set partner for each person
     for (Person* p : profiles) {
@@ -117,23 +123,36 @@ void readHouseholds() {
     file.close();
     // set host and members for each household
     for (Household* hh : Family) {
-        Person* host = hh->getPersonByID(hh->getHost_Personal_ID(), profiles, IDHash);
+        Person* host = hh->getPersonByID(hh->getHost_Personal_ID(), IDHash);
         if (host != nullptr) {
-            hh->setHost(host); 
-            host->setHost(host);
+            // host here is of type Person*, need to cast to Host*
+            Host* h = dynamic_cast<Host*>(host);
+            hh->setHost(h);
+            host->setHost(h);
         }
         for (Person* p : profiles) 
             if (p->getHousehold_ID() == hh->getHousehold_ID() ) {
-                p->setHost(host);
+                Host* h = dynamic_cast<Host*>(host);
+                p->setHost(h);
                 hh->addMember(p);
             }
     }
 }
 
+// bool cmpProfiles(Person* const &a, Person* const &b) {
+//     return stod(a->getHousehold_ID().substr(2)) < stod(b->getHousehold_ID().substr(2));
+// }
+
 void updatePerson() {
-    sort(profiles.begin(), profiles.end(), [](auto const& a, auto const& b) {
-        return stod(a->getHousehold_ID().substr(2)) < stod(b->getHousehold_ID().substr(2));
+    // sort(profiles.begin(), profiles.end(), [](auto const& a, auto const& b) {
+    //     return stod(a->getHousehold_ID().substr(2)) < stod(b->getHousehold_ID().substr(2));
+    // });
+    
+    // introSort(profiles, cmpProfiles);
+    introSort(profiles, +[](Person* const &pa, Person* const &pb) {
+        return stod(pa->getHousehold_ID().substr(2)) < stod(pb->getHousehold_ID().substr(2));
     });
+
     ofstream file("Person_test.txt");
     file << "Personal_ID,Household_ID,full name,birthday,gender,address,partner_ID,job,income,password" << endl;
     string data[10];
@@ -175,5 +194,4 @@ void updateHousehold() {
         file << data[3] << "\n";
         
     }
-    
 }
