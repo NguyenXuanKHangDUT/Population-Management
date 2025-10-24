@@ -13,7 +13,7 @@
 using namespace std;
 
 MyVector<Person*> profiles; // Each pointer points to a Person
-MyVector<Household*> Family;  // Each pointer points to a Household
+MyVector<Household*> Families;  // Each pointer points to a Household
 
 HashMap<string, Person*> IDHash;   // Maps Personal_ID to Person pointers
 
@@ -34,8 +34,8 @@ int main() {
 
     // Example usage: print all persons
     
-    // for (const Household* h : Family) 
-    // cout << *h << endl;
+    for (const Household* h : Families) 
+        cout << *h << endl;
     int c = 0;
     for (const Person* p : profiles) {
         cout << *p << endl;
@@ -96,7 +96,7 @@ void readPersons() {
                 p->setPartner(partner);
         }
     }
-    
+
 }
 void readHouseholds() {
     ifstream file("Household_test.txt");
@@ -118,17 +118,18 @@ void readHouseholds() {
         else if (rgID == "10") rgID = "Rose";
         else rgID = "Sina";
         Household* newHousehold = new Household(hhID, adr, hpID, rgID);
-        Family.push_back(newHousehold);
+        Families.push_back(newHousehold);
     }
     file.close();
     // set host and members for each household
-    for (Household* hh : Family) {
+    for (Household* hh : Families) {
         Person* host = hh->getPersonByID(hh->getHost_Personal_ID(), IDHash);
         if (host != nullptr) {
             // host here is of type Person*, need to cast to Host*
-            Host* h = dynamic_cast<Host*>(host);
-            hh->setHost(h);
-            host->setHost(h);
+            Host* realHost = dynamic_cast<Host*>(host);
+            realHost->setHousehold(hh);
+            hh->setHost(realHost);
+            realHost->setHost(realHost);
         }
         for (Person* p : profiles) 
             if (p->getHousehold_ID() == hh->getHousehold_ID() ) {
@@ -139,16 +140,7 @@ void readHouseholds() {
     }
 }
 
-// bool cmpProfiles(Person* const &a, Person* const &b) {
-//     return stod(a->getHousehold_ID().substr(2)) < stod(b->getHousehold_ID().substr(2));
-// }
-
 void updatePerson() {
-    // sort(profiles.begin(), profiles.end(), [](auto const& a, auto const& b) {
-    //     return stod(a->getHousehold_ID().substr(2)) < stod(b->getHousehold_ID().substr(2));
-    // });
-    
-    // introSort(profiles, cmpProfiles);
     introSort(profiles, +[](Person* const &pa, Person* const &pb) {
         return stod(pa->getHousehold_ID().substr(2)) < stod(pb->getHousehold_ID().substr(2));
     });
@@ -173,16 +165,10 @@ void updatePerson() {
     }
 }
 void updateHousehold() {
-    // sort(Family.begin(), Family.end(), [](auto const& a, auto const& b) {
-    //     return stod(a->getHousehold_ID().substr(2)) < stod(b->getHousehold_ID().substr(2)); 
-    // });
-    // sort(Family.begin(), Family.end(), [](auto const& a, auto const& b) {
-    //     return stod(a->getHousehold_ID().substr(0,2)) < stod(b->getHousehold_ID().substr(0,2)); 
-    // });
     ofstream file("Household_test.txt");
     file << "Household_ID,Address,Host_Personal_ID,Region_ID" << "\n";
     string data[4];
-    for (const Household* h : Family) {
+    for (const Household* h : Families) {
         data[0] = h->getHousehold_ID().insert(0, "'");
         data[1] = h->getAddress();
         data[2] = h->getHost_Personal_ID().insert(0, "'");
@@ -192,6 +178,5 @@ void updateHousehold() {
         for (int i = 0; i < 3; i++) 
             file << data[i] << ",";
         file << data[3] << "\n";
-        
     }
 }

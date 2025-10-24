@@ -37,9 +37,15 @@ Person* Household::getPersonByID(const string& id, const HashMap<string, Person*
     return nullptr; // Not found
 }
 Person* Household::getPersonByName(const string& name) const {
-    for (Person* p : this->Member) 
-        if (p->getFullName() == name) return p;
-    return nullptr;
+    // find in hashmap
+    auto target = this->nameMember.find(name);
+    if (target != this->nameMember.end() ) {
+        return target->second;
+    }
+    return nullptr; // Not found
+    // for (Person* p : this->Member) 
+    //     if (p->getFullName() == name) return p;
+    // return nullptr;
 }
 
 // Setters
@@ -50,15 +56,20 @@ void Household::addMember(Person* member) {
 }
 
 void Household::removeMember(Person* member) {
+    if (!member) return;
+
+    this->nameMember.erase(member->getFullName());
+
     for (int i = 0; i < this->Member.size(); ++i) 
         if (this->Member[i] == member) {
-            this->Member.erase(this->Member.begin()+i);
             delete this->Member[i];
+            this->Member.erase(this->Member.begin()+i);
+            member = nullptr;
             break;
         }
 }
 
-// Display family information
+// Display Families information
 ostream& operator<<(ostream& out, const Household& hh) {
     out << "Household ID: " << hh.Household_ID << endl;
     out << "Address: " << hh.Address << endl;
@@ -66,7 +77,7 @@ ostream& operator<<(ostream& out, const Household& hh) {
     out << "Host: ";
     out << hh.HostPtr->getFullName() << "    ID: " << hh.HostPtr->getPersonal_ID() << endl;
     out << "Members: " << endl;
-    out << "Family's income (per month): " << hh.getIncome() << " USD\n";
+    out << "Families's income (per month): " << hh.getIncome() << " USD\n";
     // for (const Person* member : hh.Member) {
     //     out << " - " << member->getFullName() << " (ID: " << member->getPersonal_ID() << ", Age: " << member->getAge() << ")" << endl;
     // }

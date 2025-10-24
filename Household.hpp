@@ -36,7 +36,6 @@ public:
     Host* getHost() const;
     string getRegion() const;
     Person* getPersonByID(const string&, const HashMap<string, Person*>&) const;
-    
     Person* getPersonByName(const string&) const;
     double getIncome() const;
 
@@ -45,6 +44,6 @@ public:
     void addMember(Person*);
     void removeMember(Person*);
 
-    // Display family information
+    // Display Families information
     friend ostream& operator<<(ostream&, const Household&);
 };

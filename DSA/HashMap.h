@@ -81,7 +81,7 @@ public:
         auto& bucket = table[idx].data;
         for (size_t i = 0; i < bucket.size(); ++i) 
             if (bucket[i].first == key) {
-                bucket.erase(i);
+                bucket.erase(bucket.begin()+i);
                 --curSize;
                 return;
             }

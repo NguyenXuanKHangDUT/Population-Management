@@ -9,11 +9,58 @@
 #include "DSA/MyVector.h"
 #include "DSA/HashMap.h"
 
-
 using namespace std;
 
+extern HashMap<string, Person*> IDHash;
+
 Host::Host(const string& pID, const string& hID, const string& fName, const string& bDay, bool gend, const string& addr, const string& pnID, const string& job, const double& inc, const string& pwd) 
-        : Person(pID, hID, fName, bDay, gend, addr, pnID, job, inc, pwd) {}
+        : Person(pID, hID, fName, bDay, gend, addr, pnID, job, inc, pwd) {
+            this->hhPtr = nullptr;
+        }
+Host::~Host() {
+    delete hhPtr; hhPtr = nullptr;
+}
+
+void Host::setHousehold(Household* h) {
+    this->hhPtr = h;
+}
+Household* Host::getHousehold() const {
+    return this->hhPtr;
+}
+
+bool Host::banishMember() {
+    name:
+    cout << "Name: "; string name; cin >> name;
+
+    Person* member = this->hhPtr->getPersonByName(name);
+    if (!member) {
+        cout << "There were no member with that name, type againe\n";
+        goto name;
+    }
+    this->hhPtr->removeMember(member);
+    if (!member) return true;
+    return false;
+}
+
+bool Host::summondMember() {
+    cout << "Full Name: "; string name; cin >> name;
+    cout << "Birthday: "; string bd; cin >> bd;
+    cout << "Gender (1/0 : male/female): "; bool gd; cin >> gd;
+    cout << "Job: "; string j; cin >> j;
+    cout << "Income (USD): "; double ic; cin >> ic;
+
+    string newID = this->Personal_ID;
+    newID[2] = gd ? '1' : '0';
+    newID[6] = '1';  // new member
+    for (int i = 7; i < 12; ++i) // i want to generate a new random ID from index 8 to 12
+        newID[i] = '0' + rand() % 10;
+
+    Person* member = new Person(newID, this->Household_ID, name, bd, gd, this->Address, "null", j, ic, "111111");
+    this->hhPtr->addMember(member);
+    IDHash[newID] = member;
+    member->setHost(this);
+    return true;
+}
 
 ostream& operator<<(ostream& out, const Host& p) {
     out << "----------------------------------" << endl;
@@ -33,4 +80,4 @@ ostream& operator<<(ostream& out, const Host& p) {
     out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonal_ID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
-}   
+}

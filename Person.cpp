@@ -89,4 +89,4 @@ ostream& operator<<(ostream& out, const Person& p) {
     out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonal_ID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
-}   
+}
