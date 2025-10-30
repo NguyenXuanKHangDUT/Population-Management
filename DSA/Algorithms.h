@@ -121,3 +121,21 @@ T MyMin(const T& a, const T& b, bool (*cmp)(const T&, const T&)) {
     return cmp(a, b) ? a : b;
 }
 */
+
+// int getCharValue(char c) {
+//     c = tolower(c); // or toupper(c)
+//     if (c >= 'a' && c <= 'z')
+//         return c - 'a' + 1;
+//     return 1;
+// }
+
+// string makeID(const string& fname, const string& bd, bool gd, const string& rg) {
+//     string id;
+
+//     // region code
+//     if (rg == "Sina") id = "11";
+//     else if (rg == "Rose") id = "10";
+//     else id = "01";
+
+//     return id;
+// }

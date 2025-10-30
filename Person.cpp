@@ -56,7 +56,7 @@ Person* Person::getPersonByID(const string& id, const MyVector<Person*>& profile
     }
     return nullptr; // Not found
 }
-Host* Person::getHost(const HashMap<string, Person*>& IDHash) const {
+Host* Person::getHost() const {
     return this->HostPtr;
 }
 string Person::getPassword() const { return password;}
@@ -68,6 +68,7 @@ void Person::setHost(Host* host) {
     this->HostPtr = host;
 }
 void Person::setJob(const string& job) { this->Job = job;}
+void Person::setIncome(const double& ic) { this->Income = ic;}
 void Person::setPassword(const string& pwd) { this->password = pwd;}
 
 // Display Person information

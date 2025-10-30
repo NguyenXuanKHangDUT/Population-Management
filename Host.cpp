@@ -11,14 +11,16 @@
 
 using namespace std;
 
+extern MyVector<Person*> profiles;
 extern HashMap<string, Person*> IDHash;
+extern HashMap<string, int> PersonIndex;
 
 Host::Host(const string& pID, const string& hID, const string& fName, const string& bDay, bool gend, const string& addr, const string& pnID, const string& job, const double& inc, const string& pwd) 
         : Person(pID, hID, fName, bDay, gend, addr, pnID, job, inc, pwd) {
             this->hhPtr = nullptr;
         }
 Host::~Host() {
-    delete hhPtr; hhPtr = nullptr;
+    delete hhPtr;
 }
 
 void Host::setHousehold(Household* h) {
@@ -30,7 +32,7 @@ Household* Host::getHousehold() const {
 
 bool Host::banishMember() {
     name:
-    cout << "Name: "; string name; cin >> name;
+    cout << "Name: "; string name; getline(cin, name);
 
     Person* member = this->hhPtr->getPersonByName(name);
     if (!member) {
@@ -43,10 +45,10 @@ bool Host::banishMember() {
 }
 
 bool Host::summondMember() {
-    cout << "Full Name: "; string name; cin >> name;
-    cout << "Birthday: "; string bd; cin >> bd;
+    cout << "Full Name: "; string name; cin.ignore(); getline(cin, name);
+    cout << "Birthday (dd/mm/yyyy): "; string bd; cin >> bd;
     cout << "Gender (1/0 : male/female): "; bool gd; cin >> gd;
-    cout << "Job: "; string j; cin >> j;
+    cout << "Job: "; string j; cin.ignore(); getline(cin, j);
     cout << "Income (USD): "; double ic; cin >> ic;
 
     string newID = this->Personal_ID;
@@ -55,10 +57,15 @@ bool Host::summondMember() {
     for (int i = 7; i < 12; ++i) // i want to generate a new random ID from index 8 to 12
         newID[i] = '0' + rand() % 10;
 
-    Person* member = new Person(newID, this->Household_ID, name, bd, gd, this->Address, "null", j, ic, "111111");
-    this->hhPtr->addMember(member);
-    IDHash[newID] = member;
+    Person* member = new Person(newID, this->Household_ID, name, bd, gd, this->Address, "null", j, ic, "11111111");
     member->setHost(this);
+    this->hhPtr->addMember(member);
+
+    // add to global profiles and IDHash
+    IDHash[member->getPersonal_ID()] = member;
+    profiles.push_back(member);
+    PersonIndex[member->getPersonal_ID()] = profiles.size()-1;
+    
     return true;
 }
 

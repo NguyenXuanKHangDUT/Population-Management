@@ -11,11 +11,10 @@
 
 using namespace std;
 
-class Person; // forward declaration
 class Household;
 class Host : public Person
 {
-private:
+protected:
     Household* hhPtr;
 public:
     Host(const string&, const string&, const string&, const string&, bool, const string&, const string&, const string&, const double&, const string&);
@@ -24,8 +23,10 @@ public:
     void setHousehold(Household*);
     // getter
     Household* getHousehold() const;
-    bool banishMember();
-    bool summondMember();
+
+    
+    virtual bool banishMember();
+    virtual bool summondMember();
 
     friend ostream& operator<<(ostream&, const Host&);
 };

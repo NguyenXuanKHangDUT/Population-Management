@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Person.hpp"
-#include "Household.hpp"
+#include "Host.hpp"
 
 #include <iostream>
 #include <string>
@@ -17,5 +16,24 @@ class Admin : public Host
 private:
 public:
     Admin(const string&, const string&, const string&, const string&, bool, const string&, const string&, const string&, const double&, const string&);
+    ~Admin();
+
+    bool banishMember() override;
+    bool summondMember() override;
+
+    void searchName();
+    void searchID();
+
+    // filter and statistics
+    void populationPyramid();
+    void marriageRate();
+    void averageIncome();
+
+    
+    void sixDegreesOfSeparation();
+
+    
+    
+
     friend ostream& operator<<(ostream&, const Admin&);
 };

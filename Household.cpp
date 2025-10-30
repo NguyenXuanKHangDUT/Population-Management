@@ -10,11 +10,23 @@
 
 using namespace std;
 
+extern MyVector<Person*> profiles;
+extern HashMap<string, Person*> IDHash;
+extern HashMap<string, int> PersonIndex;
+
 Household::Household(const string& hhID, const string& adr, const string& hpID, const string& rg) {
     this->Household_ID = hhID;
     this->Address = adr;
     this->Host_Personal_ID = hpID;
     this->Region = rg;
+}
+
+Household::~Household() {
+    for (Person* p : this->Member) {
+        delete p;
+    }
+    this->Member.clear();
+    this->nameMember.clear();
 }
 
 // Getters
@@ -43,9 +55,6 @@ Person* Household::getPersonByName(const string& name) const {
         return target->second;
     }
     return nullptr; // Not found
-    // for (Person* p : this->Member) 
-    //     if (p->getFullName() == name) return p;
-    // return nullptr;
 }
 
 // Setters
@@ -53,13 +62,26 @@ void Household::setHost(Host* host) { this->HostPtr = host;}
 void Household::addMember(Person* member) { 
     this->Member.push_back(member);
     this->nameMember[member->getFullName()] = member;
+
+    
 }
 
 void Household::removeMember(Person* member) {
     if (!member) return;
 
-    this->nameMember.erase(member->getFullName());
+    // delete member from global profiles and IDHash
+    IDHash.erase(member->getPersonal_ID());
 
+    int idx = PersonIndex[member->getPersonal_ID()];
+    swap(profiles[idx], profiles.back());
+    profiles.pop_back();
+
+    // update PersonIndex
+    PersonIndex[profiles[idx]->getPersonal_ID()] = idx;
+    PersonIndex.erase(member->getPersonal_ID());
+
+    // delete from Household
+    this->nameMember.erase(member->getFullName());
     for (int i = 0; i < this->Member.size(); ++i) 
         if (this->Member[i] == member) {
             delete this->Member[i];

@@ -1,47 +1,74 @@
-#include <bits/stdc++.h>
+#include <iostream>
 #include <string>
 
 #include <fstream>
 #include <sstream>
 
-#include "Person.hpp"
-#include "Household.hpp"
-#include "Admin.hpp"
+// #include "Person.hpp"
+// #include "Household.hpp"
+// #include "Admin.hpp"
 
-#include "DSA/Algorithms.h"
+// #include "DSA/Algorithms.h"
+
+#include "UserInterface.h"
 
 using namespace std;
 
 MyVector<Person*> profiles; // Each pointer points to a Person
 MyVector<Household*> Families;  // Each pointer points to a Household
 
+HashMap<string, int> PersonIndex;  // Maps Personal_ID to their index in profiles so that we can look up and update quickly
 HashMap<string, Person*> IDHash;   // Maps Personal_ID to Person pointers
 
 void readPersons();
 void readHouseholds();
+void buildPersonIndex();
 
+Person* User = nullptr;
+/*
+g++ ___Launcher.cpp Household.cpp Host.cpp Admin.cpp Person.cpp UserInterface.cpp -o a
+*/
 void updatePerson();
 void updateHousehold();
-
-/*
-g++ ___Launcher.cpp Household.cpp Host.cpp Admin.cpp Person.cpp -o a
-*/
 
 int main() {
     // Read input data
     readPersons();
     readHouseholds();
+    buildPersonIndex();
 
     // Example usage: print all persons
-    
-    for (const Household* h : Families) 
-        cout << *h << endl;
-    int c = 0;
-    for (const Person* p : profiles) {
-        cout << *p << endl;
-        c++;
+    // int co = 0;
+    // for (const Household* h : Families) {
+    //     cout << *h << endl;
+    //     co++;
+    // }
+    // int c = 0;
+    // for (const Person* p : profiles) {
+    //     cout << *p << endl;
+    //     c++;
+    // }
+    // cout << co << " " << c;
+
+    UserInterface* ui = nullptr;
+
+    while (1) {
+        login();
+        UserInterface* UI = nullptr;
+        if (User->getJob() == "admin")
+            UI = new AdminInterface();
+        else if (User->getPersonal_ID().substr(7,5) == User->getHousehold_ID().substr(3,5))
+            UI = new HostInterface();
+        else
+            UI = new NetizenInterface();
+        
+        bool isExit = UI->launch();
+        delete UI;
+
+        if (isExit) break;
+        else User = nullptr;
+        
     }
-    cout << c;
     
     // Update data
     updatePerson();
@@ -138,6 +165,11 @@ void readHouseholds() {
                 hh->addMember(p);
             }
     }
+}
+
+void buildPersonIndex() {
+    for (int i = 0; i < profiles.size(); ++i)
+        PersonIndex[profiles[i]->getPersonal_ID()] = i;
 }
 
 void updatePerson() {

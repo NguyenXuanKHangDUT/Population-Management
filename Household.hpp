@@ -27,7 +27,9 @@ private:
     
 public:
     friend class Host;
+    friend class Admin;
     Household(const string&, const string&, const string&, const string&);
+    ~Household();
 
     // Getters
     string getHousehold_ID() const;

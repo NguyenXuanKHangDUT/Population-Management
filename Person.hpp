@@ -51,15 +51,17 @@ public:
     double getIncome() const;
     int getAge() const;
     Person* getPersonByID(const string&, const MyVector<Person*>&, const HashMap<string, Person*>&) const;
-    Host* getHost(const HashMap<string, Person*>&) const;
+    Host* getHost() const;
     string getPassword() const;
 
     // Setters
     void setPartner(Person*);
     void setHost(Host*);
     void setJob(const string&);
+    void setIncome(const double&);
     void setPassword(const string&);
 
     // Display Person information
     friend ostream& operator<<(ostream&, const Person&);
+
 };
