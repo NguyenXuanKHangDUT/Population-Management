@@ -59,7 +59,7 @@ bool NetizenInterface::launch() {
     cout << "1. View Personal Information\n";
     cout << "2. View my Household information\n";
     cout << "3. Update Personal Information\n";
-    cout << "4. Set marriage to someone\n";
+    cout << "4. Set marriage to someone\n\n";
     cout << "5. Sign out\n";
     cout << "0. Exit\n";
     string choice; cin >> choice;
@@ -152,9 +152,9 @@ bool HostInterface::launch() {
     cout << "1. View Personal Information\n";
     cout << "2. View my Household information\n";
     cout << "3. Update Personal Information\n";
-    cout << "4. Set marriage to someone\n";
+    cout << "4. Set marriage to someone\n\n";
     cout << "5. Add 1 more member to family\n";
-    cout << "6. Banish 1 member from family\n";
+    cout << "6. Banish 1 member from family\n\n";
     cout << "7. Sign out\n";
     cout << "0. Exit\n";
     string choice; cin >> choice;
@@ -287,7 +287,7 @@ bool AdminInterface::launch() {
     cout << "8. View populaton Pyramid\n";
     cout << "9. View marriage rate\n";
     cout << "10. View average income in each age group\n\n";
-    cout << "11. Check whether person A and person B is linked or not by rule: 'Six Degrees Of Separation':\n";
+    cout << "11. Check whether person A and person B is linked or not by rule: 'Six Degrees Of Separation':\n\n";
     cout << "12. Sign out\n";
     cout << "0. Exit\n";
     string choice; cin >> choice;
