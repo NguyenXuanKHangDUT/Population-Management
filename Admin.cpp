@@ -6,8 +6,9 @@
 #include <iostream>
 #include <string>
 
-#include "DSA/MyVector.h"
-#include "DSA/HashMap.h"
+// #include "DSA/MyVector.h"
+// #include "DSA/HashMap.h"
+#include "DSA/Algorithms.h"
 
 using namespace std;
 
@@ -46,7 +47,12 @@ bool Admin::banishMember() {
             Person* m = hh->Member[0];
             hh->removeMember(m);
         }
-        
+        for (int i = 0; i < Families.size(); ++i) {
+            if (Families[i]->getHouseholdID() == hh->getHouseholdID()) {
+                Families.erase(Families.begin()+i);
+                break;
+            }
+        }
     }
     else {
         // remove from his/her household and profiles
@@ -57,11 +63,9 @@ bool Admin::banishMember() {
     return true;
 }
 
-bool Admin::summondMember() {
+bool Admin::summonMember() {
     cout << "the member will be added to profiles directly, and that member will be a new household host\n";
     
-    // generate new ID
-    string newID = "111111111111"; // set this later
     cout << "Full Name: "; string name; cin.ignore(); getline(cin, name);
     cout << "Birthday (dd/mm/yyyy): "; string bd; cin >> bd;
     cout << "Gender (1/0 : male/female): "; bool gd; cin >> gd;
@@ -71,16 +75,23 @@ bool Admin::summondMember() {
     cout << "Income (USD): "; double ic; cin >> ic;
     string rg = addr.substr(0, addr.find('/'));
 
+    string newID = makeUniqueID(name, bd, gd, rg);
     string hhID = newID.substr(0,2)+newID.substr(6,6);
     Host* p = new Host(newID, hhID, name, bd, gd, addr, partnerID, j, ic, "11111111");
     Household* hh = new Household(hhID, addr, newID, newID.substr(0,2));
+    p->setHousehold(hh);
     p->setHost(p);
+    hh->addMember(p);
+    hh->setHost(p);
+
+    // add to global profiles and Families
     profiles.push_back(p);
     Families.push_back(hh);
-    
     IDHash[newID] = p;
-    PersonIndex[p->getPersonal_ID()] = profiles.size()-1;
+    PersonIndex[p->getPersonalID()] = profiles.size()-1;
 
+    cout << p->getFullName() << " has been added successfully with Personal ID: " << p->getPersonalID() << " and Household ID: " << p->getHouseholdID() << "\n";
+    cout << *hh;
     return true;
 }
 
@@ -111,7 +122,7 @@ void Admin::sixDegreesOfSeparation() {
 ostream& operator<<(ostream& out, const Admin& p) {
     out << "----------------------------------" << endl;
     out << "Person Information:" << endl;
-    out << "Personal ID: " << p.Personal_ID << endl;
+    out << "Personal ID: " << p.PersonalID << endl;
     out << "Full Name: " << p.FullName << endl;
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
     out << "Gender: " << (p.Gender?"Male":"Female") << endl;
@@ -119,11 +130,11 @@ ostream& operator<<(ostream& out, const Admin& p) {
     out << "Job: " << p.Job << " (Income: " << p.Income << " USD)" << endl;
     out << "Marriage: ";
     if (p.Partner != nullptr)
-        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonal_ID() << (p.Gender?" (Wife)":" (Husband)") << endl;
+        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonalID() << (p.Gender?" (Wife)":" (Husband)") << endl;
     else out << "Single" << endl;
-    out << "Household ID: " << p.Household_ID << endl;
+    out << "Household ID: " << p.HouseholdID << endl;
     // if (p.Host != nullptr)
-    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonal_ID() << endl;
+    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonalID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
 }   

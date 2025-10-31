@@ -24,7 +24,7 @@ private:
     }
     size_t hashString(const string& key) const {
         const size_t p = 131; // a low value prime number, but big enough to reduce collision
-        const size_t mod = 1e9 + 7; // Kaneki Ken's inspiration
+        const size_t mod = 1000000007; // Kaneki Ken's inspiration
         size_t hash = 0;
 
         for (char c : key)

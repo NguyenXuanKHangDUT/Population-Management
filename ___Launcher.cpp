@@ -4,12 +4,6 @@
 #include <fstream>
 #include <sstream>
 
-// #include "Person.hpp"
-// #include "Household.hpp"
-// #include "Admin.hpp"
-
-// #include "DSA/Algorithms.h"
-
 #include "UserInterface.h"
 
 using namespace std;
@@ -17,8 +11,8 @@ using namespace std;
 MyVector<Person*> profiles; // Each pointer points to a Person
 MyVector<Household*> Families;  // Each pointer points to a Household
 
-HashMap<string, int> PersonIndex;  // Maps Personal_ID to their index in profiles so that we can look up and update quickly
-HashMap<string, Person*> IDHash;   // Maps Personal_ID to Person pointers
+HashMap<string, int> PersonIndex;  // Maps PersonalID to their index in profiles so that we can look up and update quickly
+HashMap<string, Person*> IDHash;   // Maps PersonalID to Person pointers
 
 void readPersons();
 void readHouseholds();
@@ -38,17 +32,17 @@ int main() {
     buildPersonIndex();
 
     // Example usage: print all persons
-    // int co = 0;
-    // for (const Household* h : Families) {
-    //     cout << *h << endl;
-    //     co++;
-    // }
-    // int c = 0;
-    // for (const Person* p : profiles) {
-    //     cout << *p << endl;
-    //     c++;
-    // }
-    // cout << co << " " << c;
+    int co = 0;
+    for (const Household* h : Families) {
+        cout << *h << endl;
+        co++;
+    }
+    int c = 0;
+    for (const Person* p : profiles) {
+        cout << *p << endl;
+        c++;
+    }
+    cout << co << " " << c << endl;
 
     UserInterface* ui = nullptr;
 
@@ -57,7 +51,7 @@ int main() {
         UserInterface* UI = nullptr;
         if (User->getJob() == "admin")
             UI = new AdminInterface();
-        else if (User->getPersonal_ID().substr(7,5) == User->getHousehold_ID().substr(3,5))
+        else if (User->getPersonalID().substr(7,5) == User->getHouseholdID().substr(3,5))
             UI = new HostInterface();
         else
             UI = new NetizenInterface();
@@ -71,8 +65,10 @@ int main() {
     }
     
     // Update data
+    cout << "Updating data..." << endl;
     updatePerson();
     updateHousehold();
+    cout << "Update completed." << endl;
     return 0;
 }
 
@@ -113,12 +109,12 @@ void readPersons() {
     }
     file.close();
 
-    for (Person* p : profiles) IDHash[(*p).getPersonal_ID()] = p;
+    for (Person* p : profiles) IDHash[(*p).getPersonalID()] = p;
 
     // set partner for each person
     for (Person* p : profiles) {
-        if (!(p->getPartner_ID() == "")) {
-            Person* partner = p->getPersonByID(p->getPartner_ID(), profiles, IDHash);
+        if (!(p->getPartnerID() == "null")) {
+            Person* partner = p->getPersonByID(p->getPartnerID(), IDHash);
             if (partner != nullptr) 
                 p->setPartner(partner);
         }
@@ -150,7 +146,7 @@ void readHouseholds() {
     file.close();
     // set host and members for each household
     for (Household* hh : Families) {
-        Person* host = hh->getPersonByID(hh->getHost_Personal_ID(), IDHash);
+        Person* host = hh->getPersonByID(hh->getHost_PersonalID(), IDHash);
         if (host != nullptr) {
             // host here is of type Person*, need to cast to Host*
             Host* realHost = dynamic_cast<Host*>(host);
@@ -159,7 +155,7 @@ void readHouseholds() {
             realHost->setHost(realHost);
         }
         for (Person* p : profiles) 
-            if (p->getHousehold_ID() == hh->getHousehold_ID() ) {
+            if (p->getHouseholdID() == hh->getHouseholdID() ) {
                 Host* h = dynamic_cast<Host*>(host);
                 p->setHost(h);
                 hh->addMember(p);
@@ -169,25 +165,25 @@ void readHouseholds() {
 
 void buildPersonIndex() {
     for (int i = 0; i < profiles.size(); ++i)
-        PersonIndex[profiles[i]->getPersonal_ID()] = i;
+        PersonIndex[profiles[i]->getPersonalID()] = i;
 }
 
 void updatePerson() {
     introSort(profiles, +[](Person* const &pa, Person* const &pb) {
-        return stod(pa->getHousehold_ID().substr(2)) < stod(pb->getHousehold_ID().substr(2));
+        return stod(pa->getHouseholdID().substr(2)) < stod(pb->getHouseholdID().substr(2));
     });
 
     ofstream file("Person_test.txt");
-    file << "Personal_ID,Household_ID,full name,birthday,gender,address,partner_ID,job,income,password" << endl;
+    file << "PersonalID,HouseholdID,full name,birthday,gender,address,PartnerID,job,income,password" << endl;
     string data[10];
     for (const Person* p : profiles) {
-        data[0] = p->getPersonal_ID().insert(0, "'");
-        data[1] = p->getHousehold_ID().insert(0, "'");
+        data[0] = p->getPersonalID().insert(0, "'");
+        data[1] = p->getHouseholdID().insert(0, "'");
         data[2] = p->getFullName();
         data[3] = p->getBirthday();
         data[4] = p->getGender() == true ? "male" : "female";
         data[5] = p->getAddress();
-        data[6] = p->getPartner() == nullptr ? "null" : p->getPartner()->getPersonal_ID().insert(0, "'");
+        data[6] = p->getPartner() == nullptr ? "null" : p->getPartner()->getPersonalID().insert(0, "'");
         data[7] = p->getJob();
         data[8] = to_string((int)p->getIncome());
         data[9] = p->getPassword();
@@ -198,12 +194,12 @@ void updatePerson() {
 }
 void updateHousehold() {
     ofstream file("Household_test.txt");
-    file << "Household_ID,Address,Host_Personal_ID,Region_ID" << "\n";
+    file << "HouseholdID,Address,Host_PersonalID,Region_ID" << "\n";
     string data[4];
     for (const Household* h : Families) {
-        data[0] = h->getHousehold_ID().insert(0, "'");
+        data[0] = h->getHouseholdID().insert(0, "'");
         data[1] = h->getAddress();
-        data[2] = h->getHost_Personal_ID().insert(0, "'");
+        data[2] = h->getHost_PersonalID().insert(0, "'");
         if (h->getRegion() == "Maria") data[3] = "'01";
         if (h->getRegion() == "Rose") data[3] = "'10";
         if (h->getRegion() == "Sina") data[3] = "'11";

@@ -26,7 +26,7 @@ public:
 
     
     virtual bool banishMember();
-    virtual bool summondMember();
+    virtual bool summonMember();
 
     friend ostream& operator<<(ostream&, const Host&);
 };

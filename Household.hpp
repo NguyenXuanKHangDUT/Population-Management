@@ -16,9 +16,9 @@ class Host; // forward declaration
 class Household 
 {
 private:
-    string Household_ID;
+    string HouseholdID;
     string Address;
-    string Host_Personal_ID;
+    string Host_PersonalID;
     Host* HostPtr;
     string Region;
     
@@ -32,9 +32,9 @@ public:
     ~Household();
 
     // Getters
-    string getHousehold_ID() const;
+    string getHouseholdID() const;
     string getAddress() const;
-    string getHost_Personal_ID() const;
+    string getHost_PersonalID() const;
     Host* getHost() const;
     string getRegion() const;
     Person* getPersonByID(const string&, const HashMap<string, Person*>&) const;
@@ -45,6 +45,9 @@ public:
     void setHost(Host*);
     void addMember(Person*);
     void removeMember(Person*);
+
+    void setHouseholdID(const string&);
+    void setHost_PersonalID(const string&);
 
     // Display Families information
     friend ostream& operator<<(ostream&, const Household&);

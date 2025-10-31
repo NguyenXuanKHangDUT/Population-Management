@@ -15,9 +15,9 @@ extern HashMap<string, Person*> IDHash;
 extern HashMap<string, int> PersonIndex;
 
 Household::Household(const string& hhID, const string& adr, const string& hpID, const string& rg) {
-    this->Household_ID = hhID;
+    this->HouseholdID = hhID;
     this->Address = adr;
-    this->Host_Personal_ID = hpID;
+    this->Host_PersonalID = hpID;
     this->Region = rg;
 }
 
@@ -30,9 +30,9 @@ Household::~Household() {
 }
 
 // Getters
-string Household::getHousehold_ID() const { return this->Household_ID;}
+string Household::getHouseholdID() const { return this->HouseholdID;}
 string Household::getAddress() const { return this->Address;}
-string Household::getHost_Personal_ID() const { return this->Host_Personal_ID;}
+string Household::getHost_PersonalID() const { return this->Host_PersonalID;}
 double Household::getIncome() const {
     double ic = 0;
     for (Person* p : this->Member)
@@ -62,50 +62,73 @@ void Household::setHost(Host* host) { this->HostPtr = host;}
 void Household::addMember(Person* member) { 
     this->Member.push_back(member);
     this->nameMember[member->getFullName()] = member;
-
-    
 }
 
 void Household::removeMember(Person* member) {
     if (!member) return;
 
-    // delete member from global profiles and IDHash
-    IDHash.erase(member->getPersonal_ID());
+    //check marriage
+    if (member->getPartner() != nullptr) {
+        Person* partner = member->getPartner();
+        // Break up
+        partner->setPartner(nullptr);
+        partner->setpartnerID("null");
+    }
 
-    int idx = PersonIndex[member->getPersonal_ID()];
-    swap(profiles[idx], profiles.back());
+    // delete member from global profiles and IDHash
+    string id = member->getPersonalID();
+    IDHash.erase(id);
+
+    auto it = PersonIndex.find(id);
+    if (it == PersonIndex.end()) {
+        cout << "Error: Person not found in PersonIndex during removal." << endl;
+        return;
+    }
+
+    int idx = it->second;
+    int last = profiles.size()-1;
+
+    if (idx != last) {
+        swap(profiles[idx], profiles.back());
+        PersonIndex[profiles[idx]->getPersonalID()] = idx;
+    }
+
     profiles.pop_back();
 
     // update PersonIndex
-    PersonIndex[profiles[idx]->getPersonal_ID()] = idx;
-    PersonIndex.erase(member->getPersonal_ID());
+    PersonIndex.erase(id);
 
     // delete from Household
     this->nameMember.erase(member->getFullName());
     for (int i = 0; i < this->Member.size(); ++i) 
         if (this->Member[i] == member) {
-            delete this->Member[i];
             this->Member.erase(this->Member.begin()+i);
-            member = nullptr;
             break;
         }
 }
 
 // Display Families information
 ostream& operator<<(ostream& out, const Household& hh) {
-    out << "Household ID: " << hh.Household_ID << endl;
+    out << "Household ID: " << hh.HouseholdID << endl;
     out << "Address: " << hh.Address << endl;
     out << "Region: " << hh.Region << endl;
     out << "Host: ";
-    out << hh.HostPtr->getFullName() << "    ID: " << hh.HostPtr->getPersonal_ID() << endl;
+    out << hh.HostPtr->getFullName() << "    ID: " << hh.HostPtr->getPersonalID() << endl;
     out << "Members: " << endl;
     out << "Families's income (per month): " << hh.getIncome() << " USD\n";
     // for (const Person* member : hh.Member) {
-    //     out << " - " << member->getFullName() << " (ID: " << member->getPersonal_ID() << ", Age: " << member->getAge() << ")" << endl;
+    //     out << " - " << member->getFullName() << " (ID: " << member->getPersonalID() << ", Age: " << member->getAge() << ")" << endl;
     // }
     for (auto it = hh.nameMember.begin(); it != hh.nameMember.end(); ++it) {
         Person* member = it->second;
-        out << " - " << member->getFullName() << " (ID: " << member->getPersonal_ID() << ", Age: " << member->getAge() << ")" << endl;
+        out << " - " << member->getFullName() << " (ID: " << member->getPersonalID() << ", Age: " << member->getAge() << ")" << endl;
     }
     return out;
+}
+
+void Household::setHouseholdID(const string& hhID) {
+    this->HouseholdID = hhID;
+}
+void Household::setHost_PersonalID(const string& hpID) {
+    this->Host_PersonalID = hpID;
 }

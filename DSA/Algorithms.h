@@ -4,9 +4,13 @@
 #include "MyPair.h"
 #include "HashMap.h"
 
+#include <string>
 #include <cmath>
 
+
 using namespace std;
+
+#define ll long long
 
 template <typename T> 
 void insertionSort(int l, int r, MyVector<T>& a, bool (*cmp)(const T&, const T&)) {
@@ -122,20 +126,60 @@ T MyMin(const T& a, const T& b, bool (*cmp)(const T&, const T&)) {
 }
 */
 
-// int getCharValue(char c) {
-//     c = tolower(c); // or toupper(c)
-//     if (c >= 'a' && c <= 'z')
-//         return c - 'a' + 1;
-//     return 1;
-// }
+inline int getCharValue(char c) {
+    c = tolower(c); // or toupper(c)
+    if (c >= 'a' && c <= 'z')
+        return c - 'a' + 1;
+    return 0;
+}
 
-// string makeID(const string& fname, const string& bd, bool gd, const string& rg) {
-//     string id;
+inline string makeUniqueID(const string& fname, const string& bd, bool gd, const string& rg) {
+    string ID;
 
-//     // region code
-//     if (rg == "Sina") id = "11";
-//     else if (rg == "Rose") id = "10";
-//     else id = "01";
+    // region code
+    if (rg == "Sina") ID = "11";
+    else if (rg == "Rose") ID = "10";
+    else ID = "01";
 
-//     return id;
-// }
+    // gender code
+    if (gd) ID += "1";
+    else ID += "0";
+
+    // const hashing parameters
+    const ll P = 37;
+    const ll M = 1000000007;
+    const ll C1 = 1315423911; // Jenkins's hash
+    const ll C2 = 2654435761; // Knuth's const
+    const ll MOD9 = 1000000000;
+
+    // removw " " from name
+    string fullname = fname;
+    for (int i = 0; i < fullname.size(); ++i) {
+        if (fullname[i] == ' ') {
+            fullname.erase(i, 1);
+            --i;
+        }
+    }
+    // hash fullname
+    ll name_hash = 0;
+    for (char c : fullname)
+        name_hash = (name_hash * P + getCharValue(c)) % M;
+    
+    // hash birthday dd/mm/yyyy
+    int pos1 = bd.find('/');
+    int pos2 = bd.find('/', pos1+1);
+
+    ll day = stoll(bd.substr(0, pos1));
+    ll month = stoll(bd.substr(pos1+1, pos2-pos1-1));
+    ll year = stoll(bd.substr(pos2+1));
+    ll birth_hash = day*1000000 + month*10000 + year;
+
+    ll final_hash = ((name_hash * C1) + (birth_hash * C2)) % MOD9;
+
+    // pad leading zeros to make it 9 digits
+    string hash_str = to_string(final_hash);
+    while (hash_str.size() < 9) hash_str = '0' + hash_str;
+
+    ID += hash_str;
+    return ID;
+}

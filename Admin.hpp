@@ -19,7 +19,7 @@ public:
     ~Admin();
 
     bool banishMember() override;
-    bool summondMember() override;
+    bool summonMember() override;
 
     void searchName();
     void searchID();

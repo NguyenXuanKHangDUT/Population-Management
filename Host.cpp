@@ -6,8 +6,9 @@
 #include <iostream>
 #include <string>
 
-#include "DSA/MyVector.h"
-#include "DSA/HashMap.h"
+// #include "DSA/MyVector.h"
+// #include "DSA/HashMap.h"
+#include "DSA/Algorithms.h"
 
 using namespace std;
 
@@ -32,7 +33,7 @@ Household* Host::getHousehold() const {
 
 bool Host::banishMember() {
     name:
-    cout << "Name: "; string name; getline(cin, name);
+    cout << "Name: "; string name; cin.ignore(); getline(cin, name);
 
     Person* member = this->hhPtr->getPersonByName(name);
     if (!member) {
@@ -40,39 +41,35 @@ bool Host::banishMember() {
         goto name;
     }
     this->hhPtr->removeMember(member);
-    if (!member) return true;
-    return false;
+    return true;
 }
 
-bool Host::summondMember() {
+bool Host::summonMember() {
     cout << "Full Name: "; string name; cin.ignore(); getline(cin, name);
     cout << "Birthday (dd/mm/yyyy): "; string bd; cin >> bd;
     cout << "Gender (1/0 : male/female): "; bool gd; cin >> gd;
     cout << "Job: "; string j; cin.ignore(); getline(cin, j);
     cout << "Income (USD): "; double ic; cin >> ic;
 
-    string newID = this->Personal_ID;
-    newID[2] = gd ? '1' : '0';
-    newID[6] = '1';  // new member
-    for (int i = 7; i < 12; ++i) // i want to generate a new random ID from index 8 to 12
-        newID[i] = '0' + rand() % 10;
+    string newID = makeUniqueID(name, bd, gd, this->Region);
 
-    Person* member = new Person(newID, this->Household_ID, name, bd, gd, this->Address, "null", j, ic, "11111111");
+    Person* member = new Person(newID, this->HouseholdID, name, bd, gd, this->Address, "null", j, ic, "11111111");
     member->setHost(this);
     this->hhPtr->addMember(member);
 
     // add to global profiles and IDHash
-    IDHash[member->getPersonal_ID()] = member;
+    IDHash[member->getPersonalID()] = member;
     profiles.push_back(member);
-    PersonIndex[member->getPersonal_ID()] = profiles.size()-1;
+    PersonIndex[member->getPersonalID()] = profiles.size()-1;
     
+    cout << member->getFullName() << " has been added successfully with Personal ID: " << member->getPersonalID() << " to your household.\n";
     return true;
 }
 
 ostream& operator<<(ostream& out, const Host& p) {
     out << "----------------------------------" << endl;
     out << "Person Information:" << endl;
-    out << "Personal ID: " << p.Personal_ID << endl;
+    out << "Personal ID: " << p.PersonalID << endl;
     out << "Full Name: " << p.FullName << endl;
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
     out << "Gender: " << (p.Gender?"Male":"Female") << endl;
@@ -80,11 +77,11 @@ ostream& operator<<(ostream& out, const Host& p) {
     out << "Job: " << p.Job << " (Income: " << p.Income << " USD)" << endl;
     out << "Marriage: ";
     if (p.Partner != nullptr)
-        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonal_ID() << (p.Gender?" (Wife)":" (Husband)") << endl;
+        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonalID() << (p.Gender?" (Wife)":" (Husband)") << endl;
     else out << "Single" << endl;
-    out << "Household ID: " << p.Household_ID << endl;
+    out << "Household ID: " << p.HouseholdID << endl;
     // if (p.Host != nullptr)
-    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonal_ID() << endl;
+    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonalID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
 }

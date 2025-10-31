@@ -13,13 +13,13 @@ class Person
 {
 protected:
     // Attributes from the .txt file
-    string Personal_ID;
-    string Household_ID;
+    string PersonalID;
+    string HouseholdID;
     string FullName;
     string Birthday;
     bool Gender; // true = male, false = female
     string Address; // Region/{1 sub-region}
-    string Partner_ID;
+    string PartnerID;
     Person* Partner;
     string Job;
     double Income;
@@ -39,23 +39,27 @@ public:
     virtual ~Person();
 
     // Getters
-    string getPersonal_ID() const;
-    string getHousehold_ID() const;
+    string getPersonalID() const;
+    string getHouseholdID() const;
     string getFullName() const;
     string getBirthday() const;
     bool getGender() const;
     string getAddress() const;
-    string getPartner_ID() const;
+    string getPartnerID() const;
     Person* getPartner() const;
     string getJob() const;
     double getIncome() const;
     int getAge() const;
-    Person* getPersonByID(const string&, const MyVector<Person*>&, const HashMap<string, Person*>&) const;
+    Person* getPersonByID(const string&, const HashMap<string, Person*>&) const;
     Host* getHost() const;
     string getPassword() const;
 
     // Setters
+    void setPersonalID(const string&);
+    void setHouseholdID();
+    
     void setPartner(Person*);
+    void setpartnerID(const string&);
     void setHost(Host*);
     void setJob(const string&);
     void setIncome(const double&);

@@ -11,13 +11,13 @@ using namespace std;
 
 
 Person::Person(const string& pID, const string& hID, const string& fName, const string& bDay, bool gend, const string& addr, const string& pnID, const string& job, const double& inc, const string& pwd) {
-    this->Personal_ID = pID;
-    this->Household_ID = hID;
+    this->PersonalID = pID;
+    this->HouseholdID = hID;
     this->FullName = fName;
     this->Birthday = bDay;
     this->Gender = gend;
     this->Address = addr;
-    this->Partner_ID = pnID;
+    this->PartnerID = pnID;
     this->Partner = nullptr; // Initially no partner, can be set later using setPartner()
     this->HostPtr = nullptr; // Initially no host, can be set later using setHost()
     this->Job = job;
@@ -38,18 +38,18 @@ Person::~Person() {
 }
 
 // Getters
-string Person::getPersonal_ID() const { return this->Personal_ID;}
-string Person::getHousehold_ID() const { return this->Household_ID;}
+string Person::getPersonalID() const { return this->PersonalID;}
+string Person::getHouseholdID() const { return this->HouseholdID;}
 string Person::getFullName() const { return FullName;}
 string Person::getBirthday() const { return Birthday;}
 bool Person::getGender() const { return Gender;}
 string Person::getAddress() const { return Address;}
-string Person::getPartner_ID() const { return Partner_ID;}
+string Person::getPartnerID() const { return PartnerID;}
 Person* Person::getPartner() const { return Partner;}
 string Person::getJob() const { return Job;}
 double Person::getIncome() const { return Income;}
 int Person::getAge() const { return Age;}
-Person* Person::getPersonByID(const string& id, const MyVector<Person*>& profiles, const HashMap<string, Person*>& IDHash) const {
+Person* Person::getPersonByID(const string& id, const HashMap<string, Person*>& IDHash) const {
     auto target = IDHash.find(id);
     if (target != IDHash.end() ) {
         return target->second;
@@ -75,7 +75,7 @@ void Person::setPassword(const string& pwd) { this->password = pwd;}
 ostream& operator<<(ostream& out, const Person& p) {
     out << "----------------------------------" << endl;
     out << "Person Information:" << endl;
-    out << "Personal ID: " << p.Personal_ID << endl;
+    out << "Personal ID: " << p.PersonalID << endl;
     out << "Full Name: " << p.FullName << endl;
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
     out << "Gender: " << (p.Gender?"Male":"Female") << endl;
@@ -83,11 +83,23 @@ ostream& operator<<(ostream& out, const Person& p) {
     out << "Job: " << p.Job << " (Income: " << p.Income << " USD)" << endl;
     out << "Marriage: ";
     if (p.Partner != nullptr)
-        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonal_ID() << (p.Gender?" (Wife)":" (Husband)") << endl;
+        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonalID() << (p.Gender?" (Wife)":" (Husband)") << endl;
     else out << "Single" << endl;
-    out << "Household ID: " << p.Household_ID << endl;
+    out << "Household ID: " << p.HouseholdID << endl;
     // if (p.HostPtr != nullptr)
-    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonal_ID() << endl;
+    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonalID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
+}
+
+// New setter methods
+void Person::setPersonalID(const string& pID) {
+    this->PersonalID = pID;
+}
+void Person::setHouseholdID() {
+    string newhhID = this->getHost()->getPersonalID().substr(0,2) + this->getHost()->getPersonalID().substr(6,6);
+    this->HouseholdID = newhhID;
+}
+void Person::setpartnerID(const string& pnID) {
+    this->PartnerID = pnID;
 }
