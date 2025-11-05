@@ -23,14 +23,17 @@ Host::Host(const string& pID, const string& hID, const string& fName, const stri
 Host::~Host() {
     delete hhPtr;
 }
-
-void Host::setHousehold(Household* h) {
-    this->hhPtr = h;
-}
+// getter
 Household* Host::getHousehold() const {
     return this->hhPtr;
 }
 
+// setter
+void Host::setHousehold(Household* h) {
+    this->hhPtr = h;
+}
+
+// functional methods
 bool Host::banishMember() {
     name:
     cout << "Name: "; string name; cin.ignore(); getline(cin, name);

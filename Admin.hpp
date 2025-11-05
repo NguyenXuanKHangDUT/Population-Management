@@ -18,6 +18,7 @@ public:
     Admin(const string&, const string&, const string&, const string&, bool, const string&, const string&, const string&, const double&, const string&);
     ~Admin();
 
+    // Add/Remove methods
     bool banishMember() override;
     bool summonMember() override;
 
@@ -31,9 +32,6 @@ public:
 
     
     void sixDegreesOfSeparation();
-
-    
-    
 
     friend ostream& operator<<(ostream&, const Admin&);
 };

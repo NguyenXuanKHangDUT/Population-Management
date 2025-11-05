@@ -19,9 +19,9 @@ private:
     string HouseholdID;
     string Address;
     string Host_PersonalID;
-    Host* HostPtr;
     string Region;
     
+    Host* HostPtr;
     MyVector<Person*> Member;
     HashMap<string, Person*> nameMember;
     
@@ -43,11 +43,10 @@ public:
 
     // Setters
     void setHost(Host*);
+
+    // functional methods
     void addMember(Person*);
     void removeMember(Person*);
-
-    void setHouseholdID(const string&);
-    void setHost_PersonalID(const string&);
 
     // Display Families information
     friend ostream& operator<<(ostream&, const Household&);

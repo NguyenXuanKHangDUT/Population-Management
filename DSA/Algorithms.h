@@ -7,12 +7,11 @@
 #include <string>
 #include <cmath>
 
-
 using namespace std;
 
 #define ll long long
 
-template <typename T> 
+template <typename T>
 void insertionSort(int l, int r, MyVector<T>& a, bool (*cmp)(const T&, const T&)) {
     for (int i = l+1; i <= r; ++i) {
         T key = a[i];

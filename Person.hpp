@@ -55,9 +55,6 @@ public:
     string getPassword() const;
 
     // Setters
-    void setPersonalID(const string&);
-    void setHouseholdID();
-    
     void setPartner(Person*);
     void setpartnerID(const string&);
     void setHost(Host*);

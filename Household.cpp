@@ -22,9 +22,6 @@ Household::Household(const string& hhID, const string& adr, const string& hpID, 
 }
 
 Household::~Household() {
-    for (Person* p : this->Member) {
-        delete p;
-    }
     this->Member.clear();
     this->nameMember.clear();
 }
@@ -67,7 +64,7 @@ void Household::addMember(Person* member) {
 void Household::removeMember(Person* member) {
     if (!member) return;
 
-    //check marriage
+    // check marriage
     if (member->getPartner() != nullptr) {
         Person* partner = member->getPartner();
         // Break up
@@ -124,11 +121,4 @@ ostream& operator<<(ostream& out, const Household& hh) {
         out << " - " << member->getFullName() << " (ID: " << member->getPersonalID() << ", Age: " << member->getAge() << ")" << endl;
     }
     return out;
-}
-
-void Household::setHouseholdID(const string& hhID) {
-    this->HouseholdID = hhID;
-}
-void Household::setHost_PersonalID(const string& hpID) {
-    this->Host_PersonalID = hpID;
 }

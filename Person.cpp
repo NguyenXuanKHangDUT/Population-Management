@@ -26,15 +26,15 @@ Person::Person(const string& pID, const string& hID, const string& fName, const 
 
     // Calculate Age from Birthday 
     // Birthday's format: "DD/MM/YYYY"
-    this->YearOfBirth = stoi(Birthday.substr(6, 4));
+    this->YearOfBirth = stoi(Birthday.substr(Birthday.find_last_of('/')+1));
     this->Age = 2025 - this->YearOfBirth; // Current year is 2025
 
     this->Region = this->Address.substr(0, this->Address.find('/'));
 }
 
 Person::~Person() {
-    delete Partner; Partner = nullptr;
-    delete HostPtr; HostPtr = nullptr;
+    delete Partner;
+    delete HostPtr;
 }
 
 // Getters
@@ -63,6 +63,7 @@ string Person::getPassword() const { return password;}
 
 // Setters
 void Person::setPartner(Person* partner) { this->Partner = partner;}
+void Person::setpartnerID(const string& pnID) { this->PartnerID = pnID;}
 void Person::setHost(Host* host) {
     // this->HostPtr = dynamic_cast<Host*>(host);
     this->HostPtr = host;
@@ -90,16 +91,4 @@ ostream& operator<<(ostream& out, const Person& p) {
     out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonalID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
-}
-
-// New setter methods
-void Person::setPersonalID(const string& pID) {
-    this->PersonalID = pID;
-}
-void Person::setHouseholdID() {
-    string newhhID = this->getHost()->getPersonalID().substr(0,2) + this->getHost()->getPersonalID().substr(6,6);
-    this->HouseholdID = newhhID;
-}
-void Person::setpartnerID(const string& pnID) {
-    this->PartnerID = pnID;
 }

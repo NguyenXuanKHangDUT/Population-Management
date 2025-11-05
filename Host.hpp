@@ -19,12 +19,14 @@ protected:
 public:
     Host(const string&, const string&, const string&, const string&, bool, const string&, const string&, const string&, const double&, const string&);
     ~Host() override;
-    // setter
-    void setHousehold(Household*);
+
     // getter
     Household* getHousehold() const;
-
     
+    // setter
+    void setHousehold(Household*);
+
+    // functional methods
     virtual bool banishMember();
     virtual bool summonMember();
 

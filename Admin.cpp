@@ -20,9 +20,7 @@ extern HashMap<string, int> PersonIndex;
 Admin::Admin(const string& pID, const string& hID, const string& fName, const string& bDay, bool gend, const string& addr, const string& pnID, const string& job, const double& inc, const string& pwd) 
         : Host(pID, hID, fName, bDay, gend, addr, pnID, job, inc, pwd) {}
 
-Admin::~Admin() {
-    delete this;
-}
+Admin::~Admin() {}
 
 bool Admin::banishMember() {
     // Admin can banish any citizen from profiles
@@ -56,10 +54,11 @@ bool Admin::banishMember() {
     }
     else {
         // remove from his/her household and profiles
+        string name = member->getFullName(), id = member->getPersonalID();
         Household* hh = member->getHost()->getHousehold();
         hh->removeMember(member);
     }
-
+    cout << id << " " << member->getFullName() << " has been removed from profiles successfully\n";
     return true;
 }
 
@@ -96,11 +95,34 @@ bool Admin::summonMember() {
 }
 
 void Admin::searchName() {
-    cout << "search name has not been done yet\n";
+    cout << "Type the name to search: "; string name; cin.ignore(); getline(cin, name);
+    MyVector<Person*> _list;
+    
+    for (Person* p : profiles) {
+        if (p->getFullName() == name)
+            _list.push_back(p);
+    }
+    if (_list.size() == 0) {
+        cout << "There were no person with that name!\n";
+
+    }
+    else {
+        cout << "There were " << _list.size() << " person who name: " << name << "\n";
+        for (Person* p : _list)
+            cout << *p;
+    }
 }
 
 void Admin::searchID() {
-    cout << "search ID has not been done yet\n";
+    cout << "Type ID to search: "; string id; cin >> id;
+    auto target = IDHash.find(id);
+    if (target == IDHash.end()) {
+        cout << " There were no person id by " << id << "\n";
+    }
+    else {
+        cout << *(target->second);
+    }
+    
 }
 
 void Admin::populationPyramid() {
