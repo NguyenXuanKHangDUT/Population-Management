@@ -106,9 +106,9 @@
         ],
         
     },
-    // "github.copilot.enable": {
-    //     "*": false
-    // },
+    "github.copilot.enable": {
+        "*": false
+    },
 
     // "editor.inlineSuggest.enabled": false
     // disable github copilot suggestions module:

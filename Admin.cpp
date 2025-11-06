@@ -4,10 +4,9 @@
 #include "Host.hpp"
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 
-// #include "DSA/MyVector.h"
-// #include "DSA/HashMap.h"
 #include "DSA/Algorithms.h"
 
 using namespace std;
@@ -70,7 +69,7 @@ bool Admin::summonMember() {
     cout << "Gender (1/0 : male/female): "; bool gd; cin >> gd;
     cout << "Address (Region/{1 sub-region} .. Region must be Maria/Rose/Sina):\n   "; string addr; cin.ignore(); getline(cin, addr);
     string partnerID = "null";
-    cout << "Job: "; string j; cin.ignore(); getline(cin, j);
+    cout << "Job: "; string j; getline(cin, j);
     cout << "Income (USD): "; double ic; cin >> ic;
     string rg = addr.substr(0, addr.find('/'));
 
@@ -126,7 +125,54 @@ void Admin::searchID() {
 }
 
 void Admin::populationPyramid() {
-    cout << "population Pyramid has not been done yet\n";
+    MyVector<int> maleCount(200, 0), femaleCount(200, 0);
+    int maxAge = 0;
+
+    for (Person* p : profiles) {
+        int age = p->getAge();
+        if (age > maxAge)
+            maxAge = age;
+        if (p->getGender())
+            maleCount[age]++;
+        else femaleCount[age]++;
+    }
+    // cout << "max age: " << maxAge << "\n";
+    MyVector<int> maleGroup(18, 0), femaleGroup(18, 0);
+    for (int i = 0; i <= maxAge; ++i) {
+        int j;
+        if (i >= 85) j = 17;
+        else j = i/5;
+        maleGroup[j] += maleCount[i];
+        femaleGroup[j] += femaleCount[i];
+    }
+
+        cout << "Population Pyramid:\n";
+
+    int totalPop = 0;
+    for (int i = 0; i < 18; ++i)
+        totalPop += maleGroup[i] + femaleGroup[i];
+
+    int maxCount = 0;
+    for (int i = 0; i < 18; ++i)
+        maxCount = max(maxCount, maleGroup[i] > femaleGroup[i] ? maleGroup[i] : femaleGroup[i]);
+
+    for (int i = 17; i >= 0; --i) {
+        int maleLen = (int)((double)maleGroup[i] / maxCount * 30);  
+        int femaleLen = (int)((double)femaleGroup[i] / maxCount * 30);
+
+        cout << setw(2) << left << i * 5 << "-" << setw(2) << (i == 17 ? 85 : i*5 + 4) << " | ";
+
+        for (int j = maleLen; j < 30; ++j) cout << ' ';
+        for (int j = 0; j < maleLen; ++j) cout << '*';
+
+        cout << " || ";
+
+        for (int j = 0; j < femaleLen; ++j) cout << '*';
+        cout << '\n';
+    }
+
+    cout << "   male | female\n";
+
 }
 
 void Admin::marriageRate() {

@@ -22,6 +22,7 @@ public:
     bool banishMember() override;
     bool summonMember() override;
 
+    // search methods
     void searchName();
     void searchID();
 

@@ -9,7 +9,6 @@
 
 using namespace std;
 
-
 Person::Person(const string& pID, const string& hID, const string& fName, const string& bDay, bool gend, const string& addr, const string& pnID, const string& job, const double& inc, const string& pwd) {
     this->PersonalID = pID;
     this->HouseholdID = hID;
@@ -42,13 +41,10 @@ string Person::getPersonalID() const { return this->PersonalID;}
 string Person::getHouseholdID() const { return this->HouseholdID;}
 string Person::getFullName() const { return FullName;}
 string Person::getBirthday() const { return Birthday;}
-bool Person::getGender() const { return Gender;}
 string Person::getAddress() const { return Address;}
 string Person::getPartnerID() const { return PartnerID;}
 Person* Person::getPartner() const { return Partner;}
 string Person::getJob() const { return Job;}
-double Person::getIncome() const { return Income;}
-int Person::getAge() const { return Age;}
 Person* Person::getPersonByID(const string& id, const HashMap<string, Person*>& IDHash) const {
     auto target = IDHash.find(id);
     if (target != IDHash.end() ) {

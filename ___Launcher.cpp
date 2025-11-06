@@ -17,7 +17,8 @@ Person* User = nullptr;
 /*
 g++ ___Launcher.cpp Household.cpp Host.cpp Admin.cpp Person.cpp UserInterface.cpp -o a
 */
-
+// 111654714251
+// 111026170669
 int main() {
     // Init database
     Database* db = Database::Instance();
@@ -28,17 +29,17 @@ int main() {
     IDHash = db->getIDHash();
 
     // Example usage (dùng tên Families cũ):
-    int co = 0;
-    for (const Household* h : Families) { 
-        cout << *h << endl;
-        co++;
-    }
-    int c = 0;
+    // int co = 0;
+    // for (const Household* h : Families) { 
+    //     cout << *h << endl;
+    //     co++;
+    // }
+    // int c = 0;
     // for (const Person* p : profiles) { 
     //     cout << *p << endl;
     //     c++;
     // }
-    cout << co << " " << c << endl;
+    // cout << co << " " << c << endl;
 
     UserInterface* ui = nullptr;
 

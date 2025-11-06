@@ -43,13 +43,13 @@ public:
     string getHouseholdID() const;
     string getFullName() const;
     string getBirthday() const;
-    bool getGender() const;
+    inline bool getGender() const;
     string getAddress() const;
     string getPartnerID() const;
     Person* getPartner() const;
     string getJob() const;
-    double getIncome() const;
-    int getAge() const;
+    inline double getIncome() const;
+    inline int getAge() const;
     Person* getPersonByID(const string&, const HashMap<string, Person*>&) const;
     Host* getHost() const;
     string getPassword() const;
@@ -61,8 +61,11 @@ public:
     void setJob(const string&);
     void setIncome(const double&);
     void setPassword(const string&);
-
     // Display Person information
     friend ostream& operator<<(ostream&, const Person&);
 
 };
+
+inline bool Person::getGender() const { return Gender;}
+inline double Person::getIncome() const { return Income;}
+inline int Person::getAge() const { return Age;}
