@@ -56,7 +56,7 @@ bool Host::summonMember() {
 
     string newID = makeUniqueID(name, bd, gd, this->Region);
 
-    Person* member = new Person(newID, this->HouseholdID, name, bd, gd, this->Address, "null", j, ic, "11111111");
+    Person* member = new Person(newID, this->HouseholdID, name, bd, gd, this->Address, "'null'", j, ic, "11111111");
     member->setHost(this);
     this->hhPtr->addMember(member);
 
@@ -77,7 +77,7 @@ ostream& operator<<(ostream& out, const Host& p) {
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
     out << "Gender: " << (p.Gender?"Male":"Female") << endl;
     out << "Address: " << p.Address << endl;
-    out << "Job: " << p.Job << " (Income: " << p.Income << " USD)" << endl;
+    out << "Job: " << p.Job << " (Income: (per month) " << p.Income << " USD)" << endl;
     out << "Marriage: ";
     if (p.Partner != nullptr)
         out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonalID() << (p.Gender?" (Wife)":" (Husband)") << endl;

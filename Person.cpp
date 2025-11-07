@@ -77,7 +77,7 @@ ostream& operator<<(ostream& out, const Person& p) {
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
     out << "Gender: " << (p.Gender?"Male":"Female") << endl;
     out << "Address: " << p.Address << endl;
-    out << "Job: " << p.Job << " (Income: " << p.Income << " USD)" << endl;
+    out << "Job: " << p.Job << " (Income: (per month) " << p.Income << " USD)" << endl;
     out << "Marriage: ";
     if (p.Partner != nullptr)
         out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonalID() << (p.Gender?" (Wife)":" (Husband)") << endl;

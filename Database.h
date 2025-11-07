@@ -94,7 +94,7 @@ void Database::readPersons() {
         bDay = Infor[3];
         bool gender = (Infor[4] == "male") ? true : false;
         addr = Infor[5];
-        pnID = Infor[6] == "null" ? "" : Infor[6].substr(1,12);
+        pnID = Infor[6] == "'null'" ? "" : Infor[6].substr(1,12);
         job = Infor[7];
         double inc = stod(Infor[8]);
         pwd = Infor[9];
@@ -120,7 +120,6 @@ void Database::readPersons() {
                 p->setPartner(partner);
         }
     }
-
 }
 
 void Database::readHouseholds() {
@@ -163,6 +162,7 @@ void Database::readHouseholds() {
                 hh->addMember(p);
             }
     }
+    cout << "read households done\n";
 }
 
 void Database::buildPersonIndex() {
@@ -176,16 +176,16 @@ void Database::updatePerson() {
     });
 
     ofstream file("Person_test.txt");
-    file << "PersonalID,HouseholdID,full name,birthday,gender,address,PartnerID,job,income,password" << endl;
+    file << "'PersonalID','HouseholdID',full name,birthday,gender,address,'PartnerID',job,income,password" << endl;
     string data[10];
     for (const Person* p : this->_profiles) {
-        data[0] = p->getPersonalID().insert(0, "'");
-        data[1] = p->getHouseholdID().insert(0, "'");
+        data[0] = p->getPersonalID().insert(0, "'"); data[0] += "'";
+        data[1] = p->getHouseholdID().insert(0, "'"); data[1] += "'";
         data[2] = p->getFullName();
         data[3] = p->getBirthday();
         data[4] = p->getGender() == true ? "male" : "female";
         data[5] = p->getAddress();
-        data[6] = p->getPartner() == nullptr ? "null" : p->getPartner()->getPersonalID().insert(0, "'");
+        data[6] = p->getPartner() == nullptr ? "'null" : p->getPartner()->getPersonalID().insert(0, "'"); data[6] += "'";
         data[7] = p->getJob();
         data[8] = to_string((int)p->getIncome());
         data[9] = p->getPassword();
@@ -197,15 +197,17 @@ void Database::updatePerson() {
 
 void Database::updateHousehold() {
     ofstream file("Household_test.txt");
-    file << "HouseholdID,Address,Host_PersonalID,Region_ID" << "\n";
+    file << "'HouseholdID',Address,'Host_PersonalID','Region_ID'" << "\n";
     string data[4];
     for (const Household* h : this->_Families) {
         data[0] = h->getHouseholdID().insert(0, "'");
+        data[0] += "'";
         data[1] = h->getAddress();
         data[2] = h->getHost_PersonalID().insert(0, "'");
-        if (h->getRegion() == "Sina") data[3] = "'11";
-        if (h->getRegion() == "Rose") data[3] = "'10";
-        else data[3] = "'01";
+        data[2] += "'";
+        if (h->getRegion() == "Sina") data[3] = "'11'";
+        if (h->getRegion() == "Rose") data[3] = "'10'";
+        else data[3] = "'01'";
         for (int i = 0; i < 3; i++) 
             file << data[i] << ",";
         file << data[3] << "\n";

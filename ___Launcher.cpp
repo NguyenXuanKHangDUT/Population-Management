@@ -17,8 +17,15 @@ Person* User = nullptr;
 /*
 g++ ___Launcher.cpp Household.cpp Host.cpp Admin.cpp Person.cpp UserInterface.cpp -o a
 */
-// 111654714251
-// 111026170669
+// 111654714251 admin xk
+// 101026170669 host ak
+/*
+'111654714251','11714251',Nguyen Xuan Khang,13/10/2006,male,Sina/Mitras,'null',admin,0,11111119
+'101026170669','10170669',Huynh Nguyen Anh Kiet,10/11/2006,male,Rose/Trost,'null',Teacher,40,11111112
+
+'11714251',Sina/Mitras,'111654714251','01'
+'10170669',Rose/Trost,'101026170669','01'
+*/
 int main() {
     // Init database
     Database* db = Database::Instance();
@@ -28,23 +35,9 @@ int main() {
     PersonIndex = db->getPersonIndex();
     IDHash = db->getIDHash();
 
-    // Example usage (dùng tên Families cũ):
-    // int co = 0;
-    // for (const Household* h : Families) { 
-    //     cout << *h << endl;
-    //     co++;
-    // }
-    // int c = 0;
-    // for (const Person* p : profiles) { 
-    //     cout << *p << endl;
-    //     c++;
-    // }
-    // cout << co << " " << c << endl;
-
     UserInterface* ui = nullptr;
 
     while (1) {
-        // Assume login() uses the global containers (IDHash)
         login(); 
         
         UserInterface* UI = nullptr;
@@ -61,7 +54,8 @@ int main() {
         if (isExit) break;
         else User = nullptr;
     }
-    // reassign global containers before deleting
+
+    // reassign global containers before updating
     db->getProfiles() = profiles;
     db->getFamilies() = Families;
     db->getPersonIndex() = PersonIndex;
@@ -72,3 +66,14 @@ int main() {
     cout << "Data updated!";
     return 0;
 }
+// int co = 0;
+// for (const Household* h : Families) { 
+//     cout << *h << endl;
+//     co++;
+// }
+// int c = 0;
+// for (const Person* p : profiles) { 
+//     cout << *p << endl;
+//     c++;
+// }
+// cout << co << " " << c << endl;
