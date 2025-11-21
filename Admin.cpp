@@ -6,6 +6,8 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+
+#include <queue>
 #include <cmath>
 
 #include "DSA/Algorithms.h"
@@ -315,7 +317,6 @@ void Admin::marriageRate() {
 }
 
 void printHorizontalBar(double income, int max_bar_length, double max_income_value, char bar_symbol) {
-    // Calculate the length of the bar based on the income relative to the max_income_value
     int bar_length = 0;
     if (max_income_value > 0)
         bar_length = static_cast<int>(round((income / max_income_value) * max_bar_length));
@@ -402,29 +403,22 @@ void Admin::averageIncome() {
         return;
     }
 
-    const int maxBarLength = 60; // Max characters for the bar
-    const char barSymbol = '=';  // Symbol for the bar
-    const int labelWidth = 7;    // Width for age group labels (e.g., "15-19")
+    const int maxBarLength = 60;
+    const char barSymbol = '=';
+    const int labelWidth = 7;
 
     cout << "\n=== Average Income by Age Groups ===\n";
     cout << "Income: USD/month\n";
-    cout << string(labelWidth + maxBarLength + 20, '-') << "\n"; // Adjust header line length
+    cout << string(labelWidth + maxBarLength + 20, '-') << "\n";
 
-    // Iterate through age groups (from 65+ down to 15-19 as in your image)
     for (int i = 11 - 1; i >= 0; --i) {
-        // Print age group label
         cout << setw(labelWidth) << left << ageRanges[i] << " | ";
-        
-        // Print the horizontal bar
         printHorizontalBar(avgIncomes[i], maxBarLength, maxIncomeValue, barSymbol);
-        
-        cout << "\n"; // New line for next age group
+        cout << "\n";
     }
     cout << string(labelWidth + maxBarLength + 20, '-') << "\n";
     cout << "Income scale: 1 USD ~ " << fixed << setprecision(5) << (double)maxBarLength / maxIncomeValue << " characters\n";
 
-    // "tổng thu nhập trong cả nước  (GDP): .. USD/year" in english
-    // ""
     cout << "\ntotal income in the country (GDP): "; cout << fixed << setprecision(2) << (M.second + R.second + S.second) * 12 << " USD/year\n";
     cout << " - Sina (capital): " << fixed << setprecision(2) << S.second * 12 << " USD/year\n";
     cout << " - Rose (urban area): " << fixed << setprecision(2) << R.second * 12 << " USD/year\n";
@@ -449,8 +443,90 @@ void Admin::averageIncome() {
 }
 
 void Admin::sixDegreesOfSeparation() {
-    cout << "comming soon ... \n";
-    cout << "'Six Degrees Of Separation' is a advance function, it has not been done yet\n";
+    cout << "Person header ID: "; string idA; cin >> idA;
+    cout << "Person target ID: "; string targetID; cin >> targetID;
+    auto targetA = IDHash.find(idA);
+    auto targetB = IDHash.find(targetID);
+    if (targetA == IDHash.end()) {
+        cout << "There were no person ID by " << idA << "\n";
+        return;
+    }
+    if (targetB == IDHash.end()) {
+        cout << "There were no person ID by " << targetID << "\n";
+        return;
+    }
+    Person* header = targetA->second;
+    Person* target = targetB->second;
+
+    MyVector<Person*> path;
+
+    if (header == target) {
+        cout << "Both IDs belong to the same person: " << header->getFullName() << "\n";
+        return;
+    }
+
+    // init adjacency list
+    HashMap<string, MyVector<string>> adj; // static adjacency list
+    for (Person* p : profiles) {
+        string pID = p->getPersonalID();
+        Person* partner = p->getPartner();
+
+        if (partner) {
+            adj[pID].push_back(partner->getPersonalID());
+            adj[partner->getPersonalID()].push_back(pID);
+        }
+
+        Household* hh = p->getHost()->getHousehold();
+        for (Person* member : hh->Member) {
+            if (member == p) continue;
+            adj[pID].push_back(member->getPersonalID());
+            adj[member->getPersonalID()].push_back(pID);
+        }
+    }
+
+    // BFS
+    queue<string> q;
+    HashMap<string, string> parent;
+
+    q.push(header->getPersonalID());
+    parent[header->getPersonalID()] = ""; // root has no parent
+
+    while (!q.empty()) {
+        string curID = q.front();
+        q.pop();
+
+        MyVector<string>& neighbors = adj[curID];
+        for (const string& eachID : neighbors) {
+            if (parent.find(eachID) == parent.end()) {
+                parent[eachID] = curID;
+
+                if (eachID == targetID) {
+                    // found the linked path, reconstruct the path
+                    string crawlID = targetID;
+                    while (crawlID != "") {
+                        Person* p = IDHash[crawlID];
+                        path.push_back(p);
+                        crawlID = parent[crawlID];
+                    }
+                    // reverse the path
+                    MyVector<Person*> reversed;
+                    for (int i = path.size()-1; i >= 0; --i) {
+                        reversed.push_back(path[i]);
+                    }
+                    path = reversed;
+                    cout << "Path found! Degrees of separation: " << path.size()-1 << "\n";
+                    for (Person* p : path) {
+                        cout << p->getFullName() << " (ID: " << p->getPersonalID() << ")\n";
+                        cout << "----------------------------------------------------------\n";
+                    }
+                    return;
+                }
+                q.push(eachID);
+            }
+        }
+
+    }
+    cout << "No connection found between\n" << header->getFullName() << " and\n" << target->getFullName() << "\n";
 }
 
 ostream& operator<<(ostream& out, const Admin& p) {

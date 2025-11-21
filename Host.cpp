@@ -21,7 +21,7 @@ Host::Host(const string& pID, const string& hID, const string& fName, const stri
             this->hhPtr = nullptr;
         }
 Host::~Host() {
-    delete hhPtr;
+    hhPtr = nullptr;
 }
 // getter
 Household* Host::getHousehold() const {

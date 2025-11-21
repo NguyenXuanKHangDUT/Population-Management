@@ -162,7 +162,7 @@ void Database::readHouseholds() {
                 hh->addMember(p);
             }
     }
-    cout << "read households done\n";
+    // cout << "read households done\n";
 }
 
 void Database::buildPersonIndex() {

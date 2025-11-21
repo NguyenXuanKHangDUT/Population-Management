@@ -32,8 +32,8 @@ Person::Person(const string& pID, const string& hID, const string& fName, const 
 }
 
 Person::~Person() {
-    delete Partner;
-    delete HostPtr;
+    Partner = nullptr;
+    HostPtr = nullptr;
 }
 
 // Getters

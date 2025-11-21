@@ -22,8 +22,12 @@ Household::Household(const string& hhID, const string& adr, const string& hpID, 
 }
 
 Household::~Household() {
+    for (Person* p : this->Member) {
+        delete p;
+    }
     this->Member.clear();
     this->nameMember.clear();
+    HostPtr = nullptr;
 }
 
 // Getters
