@@ -115,7 +115,6 @@ void Database::readPersons() {
     // set partner for each person
     for (Person* p : this->_profiles) {
         if (!(p->getPartnerID() == "null")) {
-            // Person* partner = p->getPersonByID(p->getPartnerID(), this->_IDHash);
             Person* partner = nullptr;
             auto it = this->_IDHash.find(p->getPartnerID());
             if (it != this->_IDHash.end()) partner = it->second;
@@ -151,11 +150,10 @@ void Database::readHouseholds() {
     file.close();
     // set host and members for each household
     for (Household* hh : this->_Families) {
-        // Person* host = hh->getPersonByID(hh->getHost_PersonID(), this->_IDHash);
         Person* host = nullptr;
         auto it = this->_IDHash.find(hh->getHost_PersonID());
         if (it != this->_IDHash.end()) host = it->second;
-        
+
         if (host != nullptr) {
             // host here is of type Person*, need to cast to Host*
             Host* realHost = dynamic_cast<Host*>(host);
@@ -170,7 +168,6 @@ void Database::readHouseholds() {
                 hh->addMember(p);
             }
     }
-    // cout << "read households done\n";
 }
 
 void Database::buildPersonIndex() {
@@ -184,7 +181,7 @@ void Database::updatePerson() {
     });
 
     ofstream file("Person_test.txt");
-    file << "'PersonalID','HouseholdID',full name,birthday,gender,address,'PartnerID',job,income,password" << endl;
+    file << "'PersonID','HouseholdID',full name,birthday,gender,address,'PartnerID',job,income,password" << endl;
     string data[10];
     for (const Person* p : this->_profiles) {
         data[0] = p->getPersonID().insert(0, "'"); data[0] += "'";
@@ -205,7 +202,7 @@ void Database::updatePerson() {
 
 void Database::updateHousehold() {
     ofstream file("Household_test.txt");
-    file << "'HouseholdID',Address,'Host_PersonalID','Region_ID'" << "\n";
+    file << "'HouseholdID',Address,'Host_PersonID','Region_ID'" << "\n";
     string data[4];
     for (const Household* h : this->_Families) {
         data[0] = h->getHouseholdID().insert(0, "'");

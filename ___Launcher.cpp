@@ -15,7 +15,7 @@ MyVector<Household*> Families;
 Person* User = nullptr;
 
 /*
-g++ ___Launcher.cpp Household.cpp Host.cpp Admin.cpp Person.cpp UserInterface.cpp -o a
+g++ ___Launcher.cpp Household.cpp Host.cpp Admin.cpp Person.cpp date.cpp UserInterface.cpp -o a
 */
 // 111654714251 admin xk
 // 101026170669 host ak

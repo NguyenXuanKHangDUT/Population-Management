@@ -42,13 +42,6 @@ double Household::getIncome() const {
 }
 Host* Household::getHost() const { return this->HostPtr;}
 string Household::getRegion() const { return this->Region;}
-Person* Household::getPersonByID(const string& id, const HashMap<string, Person*>& IDHash) const {
-    auto target = IDHash.find(id);
-    if (target != IDHash.end() ) {
-        return target->second;
-    }
-    return nullptr; // Not found
-}
 Person* Household::getPersonByName(const string& name) const {
     // find in hashmap
     auto target = this->nameMember.find(name);

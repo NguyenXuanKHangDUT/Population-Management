@@ -49,7 +49,7 @@ bool Host::banishMember() {
 
 bool Host::summonMember() {
     cout << "Full Name: "; string name; cin.ignore(); getline(cin, name);
-    cout << "Birthday (dd/mm/yyyy): "; string bd; cin >> bd;
+    cout << "Birthday (dd/mm/yyyy): \n"; date bDay; cin >> bDay; string bd = bDay.getDate_String();
     cout << "Gender (1/0 : male/female): "; bool gd; cin >> gd;
     cout << "Job: "; string j; cin.ignore(); getline(cin, j);
     cout << "Income (USD): "; double ic; cin >> ic;

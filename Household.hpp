@@ -37,7 +37,6 @@ public:
     string getHost_PersonID() const;
     Host* getHost() const;
     string getRegion() const;
-    Person* getPersonByID(const string&, const HashMap<string, Person*>&) const;
     Person* getPersonByName(const string&) const;
     double getIncome() const;
 

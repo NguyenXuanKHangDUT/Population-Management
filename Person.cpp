@@ -13,7 +13,8 @@ Person::Person(const string& pID, const string& hID, const string& fName, const 
     this->PersonID = pID;
     this->HouseholdID = hID;
     this->FullName = fName;
-    this->Birthday = bDay;
+
+    this->Birthday = date(bDay);
     this->Gender = gend;
     this->Address = addr;
     this->PartnerID = pnID;
@@ -25,7 +26,8 @@ Person::Person(const string& pID, const string& hID, const string& fName, const 
 
     // Calculate Age from Birthday 
     // Birthday's format: "DD/MM/YYYY"
-    this->YearOfBirth = stoi(Birthday.substr(Birthday.find_last_of('/')+1));
+    // this->YearOfBirth = stoi(Birthday.substr(Birthday.find_last_of('/')+1));
+    this->YearOfBirth = this->Birthday.getYear();
     this->Age = 2025 - this->YearOfBirth; // Current year is 2025
 
     this->Region = this->Address.substr(0, this->Address.find('/'));
@@ -40,18 +42,11 @@ Person::~Person() {
 string Person::getPersonID() const { return this->PersonID;}
 string Person::getHouseholdID() const { return this->HouseholdID;}
 string Person::getFullName() const { return FullName;}
-string Person::getBirthday() const { return Birthday;}
+string Person::getBirthday() const { return this->Birthday.getDate_String();}
 string Person::getAddress() const { return Address;}
 string Person::getPartnerID() const { return PartnerID;}
 Person* Person::getPartner() const { return Partner;}
 string Person::getJob() const { return Job;}
-Person* Person::getPersonByID(const string& id, const HashMap<string, Person*>& IDHash) const {
-    auto target = IDHash.find(id);
-    if (target != IDHash.end() ) {
-        return target->second;
-    }
-    return nullptr; // Not found
-}
 Host* Person::getHost() const {
     return this->HostPtr;
 }

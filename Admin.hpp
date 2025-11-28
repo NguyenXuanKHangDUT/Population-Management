@@ -31,7 +31,6 @@ public:
     void marriageRate();
     void averageIncome();
 
-    
     void sixDegreesOfSeparation();
 
     friend ostream& operator<<(ostream&, const Admin&);

@@ -5,6 +5,7 @@
 
 #include "DSA/MyVector.h"
 #include "DSA/HashMap.h"
+#include "DSA/date.h" 
 
 using namespace std;
 
@@ -16,11 +17,14 @@ protected:
     string PersonID;
     string HouseholdID;
     string FullName;
-    string Birthday;
+
+    date Birthday;
     bool Gender; // true = male, false = female
+
     string Address; // Region/{1 sub-region}
     string PartnerID;
     Person* Partner;
+
     string Job;
     double Income;
     string password;
@@ -50,7 +54,6 @@ public:
     string getJob() const;
     inline double getIncome() const;
     inline int getAge() const;
-    Person* getPersonByID(const string&, const HashMap<string, Person*>&) const;
     Host* getHost() const;
     string getPassword() const;
 
@@ -61,6 +64,7 @@ public:
     void setJob(const string&);
     void setIncome(const double&);
     void setPassword(const string&);
+    
     // Display Person information
     friend ostream& operator<<(ostream&, const Person&);
 

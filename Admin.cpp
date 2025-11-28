@@ -30,12 +30,12 @@ bool Admin::banishMember() {
     cout << "ID: "; string id; cin >> id;
     auto target = IDHash.find(id);
     if (target == IDHash.end()) {
-        cout << "There were no member with that ID, type again\n";
+        cout << "There were no members with that ID. Please type again.\n";
         goto name;
     }
     Person* member = target->second;
     if (member->getHost() == member) {
-        cout << "this person is a host, if delete the host, all members in that household will be deleted too\n Are you sure? (1/0 : yes/no): ";
+        cout << "This person is the host. Deleting the host will also delete all members in the household.\nAre you sure? (1/0: yes/no): ";
         int ch; cin >> ch;
         if (ch != 1) {
             cout << "command cancelled\n";
@@ -65,10 +65,10 @@ bool Admin::banishMember() {
 }
 
 bool Admin::summonMember() {
-    cout << "the member will be added to profiles directly, and that member will be a new household host\n";
+    cout << "The member will be added to the profiles and set as the new household host.\n";
     
     cout << "Full Name: "; string name; cin.ignore(); getline(cin, name);
-    cout << "Birthday (dd/mm/yyyy): "; string bd; cin >> bd;
+    cout << "Birthday (dd/mm/yyyy):\n "; date bDay; cin >> bDay; string bd = bDay.getDate_String();
     cout << "Gender (1/0 : male/female): "; bool gd; cin >> gd;
     cout << "Address (Region/{1 sub-region} .. Region must be Maria/Rose/Sina):\n   "; string addr; cin.ignore(); getline(cin, addr);
     string partnerID = "'null'";
