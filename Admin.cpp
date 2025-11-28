@@ -30,7 +30,7 @@ bool Admin::banishMember() {
     cout << "ID: "; string id; cin >> id;
     auto target = IDHash.find(id);
     if (target == IDHash.end()) {
-        cout << "There were no member with that ID, type againe\n";
+        cout << "There were no member with that ID, type again\n";
         goto name;
     }
     Person* member = target->second;
@@ -56,7 +56,7 @@ bool Admin::banishMember() {
     }
     else {
         // remove from his/her household and profiles
-        string name = member->getFullName(), id = member->getPersonalID();
+        string name = member->getFullName(), id = member->getPersonID();
         Household* hh = member->getHost()->getHousehold();
         hh->removeMember(member);
     }
@@ -89,9 +89,9 @@ bool Admin::summonMember() {
     profiles.push_back(p);
     Families.push_back(hh);
     IDHash[newID] = p;
-    PersonIndex[p->getPersonalID()] = profiles.size()-1;
+    PersonIndex[p->getPersonID()] = profiles.size()-1;
 
-    cout << p->getFullName() << " has been added successfully with Personal ID: " << p->getPersonalID() << " and Household ID: " << p->getHouseholdID() << "\n";
+    cout << p->getFullName() << " has been added successfully with Personal ID: " << p->getPersonID() << " and Household ID: " << p->getHouseholdID() << "\n";
     cout << *hh;
     return true;
 }
@@ -468,19 +468,19 @@ void Admin::sixDegreesOfSeparation() {
     // init adjacency list
     HashMap<string, MyVector<string>> adj; // static adjacency list
     for (Person* p : profiles) {
-        string pID = p->getPersonalID();
+        string pID = p->getPersonID();
         Person* partner = p->getPartner();
 
         if (partner) {
-            adj[pID].push_back(partner->getPersonalID());
-            adj[partner->getPersonalID()].push_back(pID);
+            adj[pID].push_back(partner->getPersonID());
+            adj[partner->getPersonID()].push_back(pID);
         }
 
         Household* hh = p->getHost()->getHousehold();
         for (Person* member : hh->Member) {
             if (member == p) continue;
-            adj[pID].push_back(member->getPersonalID());
-            adj[member->getPersonalID()].push_back(pID);
+            adj[pID].push_back(member->getPersonID());
+            adj[member->getPersonID()].push_back(pID);
         }
     }
 
@@ -488,8 +488,8 @@ void Admin::sixDegreesOfSeparation() {
     queue<string> q;
     HashMap<string, string> parent;
 
-    q.push(header->getPersonalID());
-    parent[header->getPersonalID()] = ""; // root has no parent
+    q.push(header->getPersonID());
+    parent[header->getPersonID()] = ""; // root has no parent
 
     while (!q.empty()) {
         string curID = q.front();
@@ -516,7 +516,7 @@ void Admin::sixDegreesOfSeparation() {
                     path = reversed;
                     cout << "Path found! Degrees of separation: " << path.size()-1 << "\n";
                     for (Person* p : path) {
-                        cout << p->getFullName() << " (ID: " << p->getPersonalID() << ")\n";
+                        cout << p->getFullName() << " (ID: " << p->getPersonID() << ")\n";
                         cout << "----------------------------------------------------------\n";
                     }
                     return;
@@ -532,7 +532,7 @@ void Admin::sixDegreesOfSeparation() {
 ostream& operator<<(ostream& out, const Admin& p) {
     out << "----------------------------------" << endl;
     out << "Person Information:" << endl;
-    out << "Personal ID: " << p.PersonalID << endl;
+    out << "Person ID: " << p.PersonID << endl;
     out << "Full Name: " << p.FullName << endl;
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
     out << "Gender: " << (p.Gender?"Male":"Female") << endl;
@@ -540,11 +540,11 @@ ostream& operator<<(ostream& out, const Admin& p) {
     out << "Job: " << p.Job << " (Income: (per month) " << p.Income << " USD)" << endl;
     out << "Marriage: ";
     if (p.Partner != nullptr)
-        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonalID() << (p.Gender?" (Wife)":" (Husband)") << endl;
+        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonID() << (p.Gender?" (Wife)":" (Husband)") << endl;
     else out << "Single" << endl;
     out << "Household ID: " << p.HouseholdID << endl;
     // if (p.Host != nullptr)
-    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonalID() << endl;
+    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
 }

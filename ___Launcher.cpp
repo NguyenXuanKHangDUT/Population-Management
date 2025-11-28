@@ -35,15 +35,13 @@ int main() {
     PersonIndex = db->getPersonIndex();
     IDHash = db->getIDHash();
 
-    UserInterface* ui = nullptr;
-
     while (1) {
         login(); 
         
         UserInterface* UI = nullptr;
         if (User->getJob() == "admin")
             UI = new AdminInterface();
-        else if (User->getPersonalID().substr(7,5) == User->getHouseholdID().substr(3,5))
+        else if (User->getPersonID().substr(7,5) == User->getHouseholdID().substr(3,5))
             UI = new HostInterface();
         else
             UI = new NetizenInterface();
@@ -66,14 +64,3 @@ int main() {
     cout << "Data updated!";
     return 0;
 }
-// int co = 0;
-// for (const Household* h : Families) { 
-//     cout << *h << endl;
-//     co++;
-// }
-// int c = 0;
-// for (const Person* p : profiles) { 
-//     cout << *p << endl;
-//     c++;
-// }
-// cout << co << " " << c << endl;

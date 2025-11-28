@@ -37,12 +37,13 @@ void login() {
         Change_Password:
         cout << "New password (3 <= length <= 8): ";
         string npw; cin >> npw;
-        if (npw.length() >= 3 && npw.length() <= 8) {
-            User->setPassword(npw);
-            cout << "Password changed successfully.\n";
-        } else if (npw == "11111111") {
+        if (npw == "11111111") {
             cout << "New password cannot be the default password. type again!!\n";
             goto Change_Password;
+        }
+        else if (npw.length() >= 3 && npw.length() <= 8) {
+            User->setPassword(npw);
+            cout << "Password changed successfully.\n";
         }
         else {
             cout << "Invalid password length. type again!!\n";
@@ -105,6 +106,13 @@ bool NetizenInterface::launch() {
         }
     }
     else if (choice == "4") {
+        if (User->getPartner()) {
+            cout << "You have already got marriage\n";
+            cout << "Type 'go_on' to return to main menu\n";
+                string c; 
+                while (c != "go_on") cin >> c;
+                goto First_Entrance;
+        }
         Choose_Partner:
         cout << "Type 'back' to back\n";
         cout << "Type " << (User->getGender() ? "her" : "his") << " Personal ID: ";
@@ -200,6 +208,13 @@ bool HostInterface::launch() {
         }
     }
     else if (choice == "4") {
+        if (User->getPartner()) {
+            cout << "You have already got marriage!\n";
+            cout << "Type 'go_on' to return to main menu\n";
+                string c; 
+                while (c != "go_on") cin >> c;
+                goto First_Entrance;
+        }
         Choose_Partner:
         cout << "Type 'back' to back\n";
         cout << "Type " << (hostUser->getGender() ? "her" : "his") << " Personal ID: ";
@@ -309,6 +324,13 @@ bool AdminInterface::launch() {
         goto First_Entrance;
     }
     else if (choice == "3") {
+        if (User->getPartner()) {
+            cout << "You have already got marriage!\n";
+            cout << "Type 'go_on' to return to main menu\n";
+                string c; 
+                while (c != "go_on") cin >> c;
+                goto First_Entrance;
+        }
         Choose_Partner:
         cout << "Type 'back' to back\n";
         cout << "Type " << (adminUser->getGender() ? "her" : "his") << " Personal ID: ";

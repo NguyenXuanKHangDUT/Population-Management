@@ -17,7 +17,7 @@ extern HashMap<string, int> PersonIndex;
 Household::Household(const string& hhID, const string& adr, const string& hpID, const string& rg) {
     this->HouseholdID = hhID;
     this->Address = adr;
-    this->Host_PersonalID = hpID;
+    this->Host_PersonID = hpID;
     this->Region = rg;
 }
 
@@ -33,7 +33,7 @@ Household::~Household() {
 // Getters
 string Household::getHouseholdID() const { return this->HouseholdID;}
 string Household::getAddress() const { return this->Address;}
-string Household::getHost_PersonalID() const { return this->Host_PersonalID;}
+string Household::getHost_PersonID() const { return this->Host_PersonID;}
 double Household::getIncome() const {
     double ic = 0;
     for (Person* p : this->Member)
@@ -77,7 +77,7 @@ void Household::removeMember(Person* member) {
     }
 
     // delete member from global profiles and IDHash
-    string id = member->getPersonalID();
+    string id = member->getPersonID();
     IDHash.erase(id);
 
     auto it = PersonIndex.find(id);
@@ -91,7 +91,7 @@ void Household::removeMember(Person* member) {
 
     if (idx != last) {
         swap(profiles[idx], profiles.back());
-        PersonIndex[profiles[idx]->getPersonalID()] = idx;
+        PersonIndex[profiles[idx]->getPersonID()] = idx;
     }
 
     profiles.pop_back();
@@ -114,7 +114,7 @@ ostream& operator<<(ostream& out, const Household& hh) {
     out << "Address: " << hh.Address << endl;
     out << "Region: " << hh.Region << endl;
     out << "Host: ";
-    out << hh.HostPtr->getFullName() << "    ID: " << hh.HostPtr->getPersonalID() << endl;
+    out << hh.HostPtr->getFullName() << "    ID: " << hh.HostPtr->getPersonID() << endl;
     out << "Members: " << endl;
     out << "Families's income (per month): " << hh.getIncome() << " USD\n";
     // for (const Person* member : hh.Member) {
@@ -122,7 +122,7 @@ ostream& operator<<(ostream& out, const Household& hh) {
     // }
     for (auto it = hh.nameMember.begin(); it != hh.nameMember.end(); ++it) {
         Person* member = it->second;
-        out << " - " << member->getFullName() << " (ID: " << member->getPersonalID() << ", Age: " << member->getAge() << ")" << endl;
+        out << " - " << member->getFullName() << " (ID: " << member->getPersonID() << ", Age: " << member->getAge() << ")" << endl;
     }
     return out;
 }

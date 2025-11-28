@@ -10,7 +10,7 @@
 using namespace std;
 
 Person::Person(const string& pID, const string& hID, const string& fName, const string& bDay, bool gend, const string& addr, const string& pnID, const string& job, const double& inc, const string& pwd) {
-    this->PersonalID = pID;
+    this->PersonID = pID;
     this->HouseholdID = hID;
     this->FullName = fName;
     this->Birthday = bDay;
@@ -37,7 +37,7 @@ Person::~Person() {
 }
 
 // Getters
-string Person::getPersonalID() const { return this->PersonalID;}
+string Person::getPersonID() const { return this->PersonID;}
 string Person::getHouseholdID() const { return this->HouseholdID;}
 string Person::getFullName() const { return FullName;}
 string Person::getBirthday() const { return Birthday;}
@@ -72,7 +72,7 @@ void Person::setPassword(const string& pwd) { this->password = pwd;}
 ostream& operator<<(ostream& out, const Person& p) {
     out << "----------------------------------" << endl;
     out << "Person Information:" << endl;
-    out << "Personal ID: " << p.PersonalID << endl;
+    out << "Person ID: " << p.PersonID << endl;
     out << "Full Name: " << p.FullName << endl;
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
     out << "Gender: " << (p.Gender?"Male":"Female") << endl;
@@ -80,11 +80,11 @@ ostream& operator<<(ostream& out, const Person& p) {
     out << "Job: " << p.Job << " (Income: (per month) " << p.Income << " USD)" << endl;
     out << "Marriage: ";
     if (p.Partner != nullptr)
-        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonalID() << (p.Gender?" (Wife)":" (Husband)") << endl;
+        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonID() << (p.Gender?" (Wife)":" (Husband)") << endl;
     else out << "Single" << endl;
     out << "Household ID: " << p.HouseholdID << endl;
     // if (p.HostPtr != nullptr)
-    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonalID() << endl;
+    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
 }

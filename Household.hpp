@@ -18,7 +18,7 @@ class Household
 private:
     string HouseholdID;
     string Address;
-    string Host_PersonalID;
+    string Host_PersonID;
     string Region;
     
     Host* HostPtr;
@@ -34,7 +34,7 @@ public:
     // Getters
     string getHouseholdID() const;
     string getAddress() const;
-    string getHost_PersonalID() const;
+    string getHost_PersonID() const;
     Host* getHost() const;
     string getRegion() const;
     Person* getPersonByID(const string&, const HashMap<string, Person*>&) const;

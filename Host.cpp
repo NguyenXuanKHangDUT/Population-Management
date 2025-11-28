@@ -61,18 +61,18 @@ bool Host::summonMember() {
     this->hhPtr->addMember(member);
 
     // add to global profiles and IDHash
-    IDHash[member->getPersonalID()] = member;
+    IDHash[member->getPersonID()] = member;
     profiles.push_back(member);
-    PersonIndex[member->getPersonalID()] = profiles.size()-1;
+    PersonIndex[member->getPersonID()] = profiles.size()-1;
     
-    cout << member->getFullName() << " has been added successfully with Personal ID: " << member->getPersonalID() << " to your household.\n";
+    cout << member->getFullName() << " has been added successfully with Personal ID: " << member->getPersonID() << " to your household.\n";
     return true;
 }
 
 ostream& operator<<(ostream& out, const Host& p) {
     out << "----------------------------------" << endl;
     out << "Person Information:" << endl;
-    out << "Personal ID: " << p.PersonalID << endl;
+    out << "Person ID: " << p.PersonID << endl;
     out << "Full Name: " << p.FullName << endl;
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
     out << "Gender: " << (p.Gender?"Male":"Female") << endl;
@@ -80,11 +80,11 @@ ostream& operator<<(ostream& out, const Host& p) {
     out << "Job: " << p.Job << " (Income: (per month) " << p.Income << " USD)" << endl;
     out << "Marriage: ";
     if (p.Partner != nullptr)
-        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonalID() << (p.Gender?" (Wife)":" (Husband)") << endl;
+        out << p.Partner->getFullName() << "    ID: " << p.Partner->getPersonID() << (p.Gender?" (Wife)":" (Husband)") << endl;
     else out << "Single" << endl;
     out << "Household ID: " << p.HouseholdID << endl;
     // if (p.Host != nullptr)
-    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonalID() << endl;
+    out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonID() << endl;
     out << "Region: " << p.Region << endl;
     return out;
 }

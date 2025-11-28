@@ -110,13 +110,17 @@ void Database::readPersons() {
     }
     file.close();
 
-    for (Person* p : this->_profiles) this->_IDHash[(*p).getPersonalID()] = p;
+    for (Person* p : this->_profiles) this->_IDHash[(*p).getPersonID()] = p;
 
     // set partner for each person
     for (Person* p : this->_profiles) {
         if (!(p->getPartnerID() == "null")) {
-            Person* partner = p->getPersonByID(p->getPartnerID(), this->_IDHash);
-            if (partner != nullptr) 
+            // Person* partner = p->getPersonByID(p->getPartnerID(), this->_IDHash);
+            Person* partner = nullptr;
+            auto it = this->_IDHash.find(p->getPartnerID());
+            if (it != this->_IDHash.end()) partner = it->second;
+            
+            if (partner != nullptr)
                 p->setPartner(partner);
         }
     }
@@ -147,7 +151,11 @@ void Database::readHouseholds() {
     file.close();
     // set host and members for each household
     for (Household* hh : this->_Families) {
-        Person* host = hh->getPersonByID(hh->getHost_PersonalID(), this->_IDHash);
+        // Person* host = hh->getPersonByID(hh->getHost_PersonID(), this->_IDHash);
+        Person* host = nullptr;
+        auto it = this->_IDHash.find(hh->getHost_PersonID());
+        if (it != this->_IDHash.end()) host = it->second;
+        
         if (host != nullptr) {
             // host here is of type Person*, need to cast to Host*
             Host* realHost = dynamic_cast<Host*>(host);
@@ -167,7 +175,7 @@ void Database::readHouseholds() {
 
 void Database::buildPersonIndex() {
     for (int i = 0; i < this->_profiles.size(); ++i)
-        this->_PersonIndex[this->_profiles[i]->getPersonalID()] = i;
+        this->_PersonIndex[this->_profiles[i]->getPersonID()] = i;
 }
 
 void Database::updatePerson() {
@@ -179,13 +187,13 @@ void Database::updatePerson() {
     file << "'PersonalID','HouseholdID',full name,birthday,gender,address,'PartnerID',job,income,password" << endl;
     string data[10];
     for (const Person* p : this->_profiles) {
-        data[0] = p->getPersonalID().insert(0, "'"); data[0] += "'";
+        data[0] = p->getPersonID().insert(0, "'"); data[0] += "'";
         data[1] = p->getHouseholdID().insert(0, "'"); data[1] += "'";
         data[2] = p->getFullName();
         data[3] = p->getBirthday();
         data[4] = p->getGender() == true ? "male" : "female";
         data[5] = p->getAddress();
-        data[6] = p->getPartner() == nullptr ? "'null" : p->getPartner()->getPersonalID().insert(0, "'"); data[6] += "'";
+        data[6] = p->getPartner() == nullptr ? "'null" : p->getPartner()->getPersonID().insert(0, "'"); data[6] += "'";
         data[7] = p->getJob();
         data[8] = to_string((int)p->getIncome());
         data[9] = p->getPassword();
@@ -203,7 +211,7 @@ void Database::updateHousehold() {
         data[0] = h->getHouseholdID().insert(0, "'");
         data[0] += "'";
         data[1] = h->getAddress();
-        data[2] = h->getHost_PersonalID().insert(0, "'");
+        data[2] = h->getHost_PersonID().insert(0, "'");
         data[2] += "'";
         if (h->getRegion() == "Sina") data[3] = "'11'";
         if (h->getRegion() == "Rose") data[3] = "'10'";

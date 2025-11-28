@@ -13,7 +13,7 @@ class Person
 {
 protected:
     // Attributes from the .txt file
-    string PersonalID;
+    string PersonID;
     string HouseholdID;
     string FullName;
     string Birthday;
@@ -39,7 +39,7 @@ public:
     virtual ~Person();
 
     // Getters
-    string getPersonalID() const;
+    string getPersonID() const;
     string getHouseholdID() const;
     string getFullName() const;
     string getBirthday() const;
