@@ -75,7 +75,9 @@ void Household::removeMember(Person* member) {
 
     auto it = PersonIndex.find(id);
     if (it == PersonIndex.end()) {
+        cout << "\u001b[31m";
         cout << "Error: Person not found in PersonIndex during removal." << endl;
+        cout << "\u001b[0m";
         return;
     }
 
@@ -103,6 +105,9 @@ void Household::removeMember(Person* member) {
 
 // Display Families information
 ostream& operator<<(ostream& out, const Household& hh) {
+    out << "\u001b[36m";
+    out << "\n----------------------------------" << endl;
+    out << "\u001b[0m";
     out << "Household ID: " << hh.HouseholdID << endl;
     out << "Address: " << hh.Address << endl;
     out << "Region: " << hh.Region << endl;
@@ -117,5 +122,8 @@ ostream& operator<<(ostream& out, const Household& hh) {
         Person* member = it->second;
         out << " - " << member->getFullName() << " (ID: " << member->getPersonID() << ", Age: " << member->getAge() << ")" << endl;
     }
+    out << "\u001b[36m";
+    out << "\n----------------------------------" << endl;
+    out << "\u001b[0m";
     return out;
 }

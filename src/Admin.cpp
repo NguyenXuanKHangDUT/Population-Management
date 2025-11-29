@@ -30,7 +30,9 @@ bool Admin::banishMember() {
     cout << "ID: "; string id; cin >> id;
     auto target = IDHash.find(id);
     if (target == IDHash.end()) {
-        cout << "There were no members with that ID. Please type again.\n";
+        cout << "\u001b[33m";
+        cout << "There were no members with ID: " << id <<  ". Please type again.\n";
+        cout << "\u001b[0m";
         goto name;
     }
     Person* member = target->second;
@@ -38,7 +40,9 @@ bool Admin::banishMember() {
         cout << "This person is the host. Deleting the host will also delete all members in the household.\nAre you sure? (1/0: yes/no): ";
         int ch; cin >> ch;
         if (ch != 1) {
+            cout << "\u001b[33m";
             cout << "command cancelled\n";
+            cout << "\u001b[0m";
             goto name;
         }
         // delete all members in that household
@@ -70,7 +74,14 @@ bool Admin::summonMember() {
     cout << "Full Name: "; string name; cin.ignore(); getline(cin, name);
     cout << "Birthday (dd/mm/yyyy):\n "; date bDay; cin >> bDay; string bd = bDay.getDate_String();
     cout << "Gender (1/0 : male/female): "; bool gd; cin >> gd;
+    ADDRESS:
     cout << "Address (Region/{1 sub-region} .. Region must be Maria/Rose/Sina):\n   "; string addr; cin.ignore(); getline(cin, addr);
+    if (addr.find("Maria") != 0 && addr.find("Rose") != 0 && addr.find("Sina") != 0) {
+        cout << "\u001b[31m";
+        cout << "Invalid region! Please type again.\n";
+        cout << "\u001b[0m";
+        goto ADDRESS;
+    }
     string partnerID = "'null'";
     cout << "Job: "; string j; getline(cin, j);
     cout << "Income (USD): "; double ic; cin >> ic;
@@ -97,7 +108,9 @@ bool Admin::summonMember() {
 }
 
 void Admin::searchName() {
+    cout << "\n\u001b[36m";
     cout << "Type the name to search: "; string name; cin.ignore(); getline(cin, name);
+    cout << "\u001b[0m";
     MyVector<Person*> _list;
     
     for (Person* p : profiles) {
@@ -105,21 +118,34 @@ void Admin::searchName() {
             _list.push_back(p);
     }
     if (_list.size() == 0) {
+        cout << "\u001b[33m";
         cout << "There were no person with that name!\n";
+        cout << "\u001b[0m";
 
     }
     else {
+        // cyan
+        cout << "\u001b[36m";
         cout << "There were " << _list.size() << " person who name: " << name << "\n";
+        cout << "\u001b[0m";
         for (Person* p : _list)
             cout << *p;
+        // cyan
+        cout << "\u001b[36m";
+        cout << "-----------------------------------\n";
+        cout << "\u001b[0m";
     }
 }
 
 void Admin::searchID() {
+    cout << "\n\u001b[36m";
     cout << "Type ID to search: "; string id; cin >> id;
+    cout << "\u001b[0m";
     auto target = IDHash.find(id);
     if (target == IDHash.end()) {
+        cout << "\u001b[33m";
         cout << " There were no person id by " << id << "\n";
+        cout << "\u001b[0m";
     }
     else {
         cout << *(target->second);
@@ -443,8 +469,10 @@ void Admin::averageIncome() {
 }
 
 void Admin::sixDegreesOfSeparation() {
+    cout << "\u001b[36m";
     cout << "Person header ID: "; string idA; cin >> idA;
     cout << "Person target ID: "; string targetID; cin >> targetID;
+    cout << "\u001b[0m";
     auto targetA = IDHash.find(idA);
     auto targetB = IDHash.find(targetID);
     if (targetA == IDHash.end()) {
@@ -502,11 +530,11 @@ void Admin::sixDegreesOfSeparation() {
 
                 if (eachID == targetID) {
                     // found the linked path, reconstruct the path
-                    string crawlID = targetID;
-                    while (crawlID != "") {
-                        Person* p = IDHash[crawlID];
+                    string nextID = targetID;
+                    while (nextID != "") {
+                        Person* p = IDHash[nextID];
                         path.push_back(p);
-                        crawlID = parent[crawlID];
+                        nextID = parent[nextID];
                     }
                     // reverse the path
                     MyVector<Person*> reversed;
@@ -515,10 +543,17 @@ void Admin::sixDegreesOfSeparation() {
                     }
                     path = reversed;
                     cout << "Path found! Degrees of separation: " << path.size()-1 << "\n";
-                    for (Person* p : path) {
-                        cout << p->getFullName() << " (ID: " << p->getPersonID() << ")\n";
-                        cout << "----------------------------------------------------------\n";
+                    cout << "\u001b[36m";
+                    cout << "ID: " << header->getPersonID() << " Name: " << header->getFullName() << "\n";
+                    cout << "\u001b[0m";
+                    for (int i = 1; i < path.size()-2; ++i) {
+                        cout << "  |\n  v\n";
+                        cout << "ID: " << path[i]->getPersonID() << " Name: " << path[i]->getFullName() << "\n";
                     }
+                    cout << "  |\n  v\n";
+                    cout << "\u001b[36m";
+                    cout << "ID: " << target->getPersonID() << " Name: " << target->getFullName() << "\n";
+                    cout << "\u001b[0m";
                     return;
                 }
                 q.push(eachID);
@@ -530,8 +565,10 @@ void Admin::sixDegreesOfSeparation() {
 }
 
 ostream& operator<<(ostream& out, const Admin& p) {
-    out << "----------------------------------" << endl;
-    out << "Person Information:" << endl;
+    out << "\u001b[36m";
+    out << "\n----------------------------------" << endl;
+    out << "\u001b[0m";
+    out << "Personal information:" << endl;
     out << "Person ID: " << p.PersonID << endl;
     out << "Full Name: " << p.FullName << endl;
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
@@ -546,5 +583,8 @@ ostream& operator<<(ostream& out, const Admin& p) {
     // if (p.Host != nullptr)
     out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonID() << endl;
     out << "Region: " << p.Region << endl;
+    out << "\u001b[36m";
+    out << "\n----------------------------------" << endl;
+    out << "\u001b[0m";
     return out;
 }

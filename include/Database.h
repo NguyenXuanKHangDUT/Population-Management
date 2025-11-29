@@ -76,7 +76,7 @@ Database* Database::Instance() {
 void Database::readPersons() {
     // Implementation for reading person data from a file
     // ifstream file("Persons__.txt");
-    ifstream file("Person_test.txt");
+    ifstream file("test/Person_test.txt");
     string line;
     getline(file, line); // Skip first line
     while (getline(file, line)) {
@@ -126,7 +126,7 @@ void Database::readPersons() {
 }
 
 void Database::readHouseholds() {
-    ifstream file("Household_test.txt");
+    ifstream file("test/Household_test.txt");
     string line;
     getline(file, line); // Skip first line
     while (getline(file, line)) {
@@ -180,7 +180,7 @@ void Database::updatePerson() {
         return stod(pa->getHouseholdID().substr(2)) < stod(pb->getHouseholdID().substr(2));
     });
 
-    ofstream file("Person_test.txt");
+    ofstream file("test/Person_test.txt");
     file << "'PersonID','HouseholdID',full name,birthday,gender,address,'PartnerID',job,income,password" << endl;
     string data[10];
     for (const Person* p : this->_profiles) {
@@ -201,7 +201,7 @@ void Database::updatePerson() {
 }
 
 void Database::updateHousehold() {
-    ofstream file("Household_test.txt");
+    ofstream file("test/Household_test.txt");
     file << "'HouseholdID',Address,'Host_PersonID','Region_ID'" << "\n";
     string data[4];
     for (const Household* h : this->_Families) {

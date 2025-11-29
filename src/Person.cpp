@@ -56,17 +56,18 @@ string Person::getPassword() const { return password;}
 void Person::setPartner(Person* partner) { this->Partner = partner;}
 void Person::setpartnerID(const string& pnID) { this->PartnerID = pnID;}
 void Person::setHost(Host* host) {
-    // this->HostPtr = dynamic_cast<Host*>(host);
     this->HostPtr = host;
 }
 void Person::setJob(const string& job) { this->Job = job;}
 void Person::setIncome(const double& ic) { this->Income = ic;}
 void Person::setPassword(const string& pwd) { this->password = pwd;}
 
-// Display Person information
+// Display Personal information
 ostream& operator<<(ostream& out, const Person& p) {
-    out << "----------------------------------" << endl;
-    out << "Person Information:" << endl;
+    out << "\u001b[36m";
+    out << "\n----------------------------------" << endl;
+    out << "\u001b[0m";
+    out << "Personal information:" << endl;
     out << "Person ID: " << p.PersonID << endl;
     out << "Full Name: " << p.FullName << endl;
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
@@ -81,5 +82,8 @@ ostream& operator<<(ostream& out, const Person& p) {
     // if (p.HostPtr != nullptr)
     out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonID() << endl;
     out << "Region: " << p.Region << endl;
+    out << "\u001b[36m";
+    out << "\n----------------------------------" << endl;
+    out << "\u001b[0m";
     return out;
 }

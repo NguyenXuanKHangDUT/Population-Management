@@ -99,11 +99,12 @@
             {
                 "scope": "comment",
                 "settings": {
-                    "foreground": "#716c6c",
+                    "foreground": "#5c4b3c",
                     "fontStyle": "italic"
                 }
             }
         ],
+
         
     },
     // "github.copilot.enable": {

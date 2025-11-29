@@ -65,7 +65,7 @@ public:
     void setIncome(const double&);
     void setPassword(const string&);
     
-    // Display Person information
+    // Display Personal information
     friend ostream& operator<<(ostream&, const Person&);
 
 };

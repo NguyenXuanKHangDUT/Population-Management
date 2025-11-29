@@ -6,8 +6,6 @@
 #include <iostream>
 #include <string>
 
-// #include "DSA/MyVector.h"
-// #include "DSA/HashMap.h"
 #include "DSA/Algorithms.h"
 
 using namespace std;
@@ -36,11 +34,23 @@ void Host::setHousehold(Household* h) {
 // functional methods
 bool Host::banishMember() {
     name:
+    // cyan
+    cout << "\u001b[36m";
     cout << "Name: "; string name; cin.ignore(); getline(cin, name);
+    cout << "\u001b[0m";
+
+    if (name == this->getFullName()) {
+        cout << "\u001b[33m";
+        cout << "You cannot banish yourself from the household\nChoose another one!\n";
+        cout << "\u001b[0m";
+        goto name;
+    }
 
     Person* member = this->hhPtr->getPersonByName(name);
     if (!member) {
-        cout << "There were no member with that name, type againe\n";
+        cout << "\u001b[33m";
+        cout << "There were no member who name: " << name << "; type again\n";
+        cout << "\u001b[0m";
         goto name;
     }
     this->hhPtr->removeMember(member);
@@ -70,8 +80,10 @@ bool Host::summonMember() {
 }
 
 ostream& operator<<(ostream& out, const Host& p) {
-    out << "----------------------------------" << endl;
-    out << "Person Information:" << endl;
+    out << "\u001b[36m";
+    out << "\n----------------------------------" << endl;
+    out << "\u001b[0m";
+    out << "Personal information:" << endl;
     out << "Person ID: " << p.PersonID << endl;
     out << "Full Name: " << p.FullName << endl;
     out << "Birthday: " << p.Birthday << " (Age: " << p.Age << ")" << endl;
@@ -86,5 +98,8 @@ ostream& operator<<(ostream& out, const Host& p) {
     // if (p.Host != nullptr)
     out << "Host of Household: " << p.HostPtr->getFullName() << "    ID: " << p.HostPtr->getPersonID() << endl;
     out << "Region: " << p.Region << endl;
+    out << "\u001b[36m";
+    out << "\n----------------------------------" << endl;
+    out << "\u001b[0m";
     return out;
 }
